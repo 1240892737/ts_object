@@ -54,7 +54,7 @@
         
         onSelect(value) {
             this.setState({
-            selection: value
+                selection: value
             },this.fireOnSelect)
             // this.fireOnSelect()
     //   setTimeout(, 0);
@@ -77,7 +77,7 @@
         
         fireOnSelect() {
             if (typeof this.props.onSelect === "function")
-            this.props.onSelect(this.state.selection) /* not what you expected..*/
+                this.props.onSelect(this.state.selection) /* not what you expected..*/
         }
         }
 
