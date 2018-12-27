@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="./build/react.js"></script>
-    <script src="./build/react-dom.js"></script>
-    <script src="./build/browser.min.js"></script>
-</head>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- 生产环境中不建议使用 -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script></head>
 <body>
     <div id="example"></div>
     <script type="text/babel">
@@ -36,27 +36,36 @@
             document.getElementById('example')
         )
         //4.组件
-        var HelloMessage = React.createClass({
-            render: function(){
-                return <h1>Hello , {this.props.name}</h1>
+        //  createClass//老版本 ,最新使用es6
+        // var HelloMessage = React.createClass({
+        //     render: function(){
+        //         return <h1>Hello , {this.props.name}</h1>
+        //     }
+        // });
+        class HelloMessage extends React.Component{
+            render(){
+                return (
+                    <h1>{this.props.name}</h1>
+                )
             }
-        });
+        }
         ReactDOM.render(
             <HelloMessage name='hzy'/>,
             document.getElementById('example')
         )
         //4.this.props.children
-        var NotesList = React.createClass({
-            render:function(){
+        class NotesList extends React.Component{
+            render(){
+                var a = 0;
                 return <ol>
-                {
+                {   
                     React.Children.map(this.props.children,function(child){
-                        return <li>{child}</li>
+                        return <li key={'li_' + a++}>{child}</li>
                     })
                 }
                 </ol>
             }
-        });
+        }
         ReactDOM.render(
             <NotesList>
                 <span>hello</span>
@@ -69,54 +78,64 @@
         // React 提供一个工具方法 React.Children 来处理 this.props.children 。我们可以用 React.Children.map 来遍历子节点，而不用担心 this.props.children 的数据类型是 undefined 还是 object。更多的 React.Children 的方法，请参考官方文档。
         //6.PropTypes
         // 组件的属性可以接受任意值，字符串、对象、函数等等都可以。有时，我们需要一种机制，验证别人使用组件时，提供的参数是否符合要求。
-        var MyTitle = React.createClass({
-            PropTypes:{
-                title: React.PropTypes.string.isRequired,
-            },
-            getDefaultProps:function(){
-                return {
-                    title:'hello world!'
-                }
-            },
-            render:function(){
-                return <h1>{this.props.title}</h1>
-            }
-        });
-        //此外，getDefaultProps 方法可以用来设置组件属性的默认值。
-        var data = 1.2;
-        ReactDOM.render(
-            <MyTitle />,
-            document.getElementById('example')
-        )
+        // var MyTitle = React.createClass({
+        //     PropTypes:{
+        //         title: React.PropTypes.string.isRequired,
+        //     },
+        //     getDefaultProps:function(){
+        //         return {
+        //             title:'hello world!'
+        //         }
+        //     },
+        //     render:function(){
+        //         return <h1>{this.props.title}</h1>
+        //     }
+        // });
+        // //此外，getDefaultProps 方法可以用来设置组件属性的默认值。
+        // var data = 1.2;
+        // ReactDOM.render(
+        //     <MyTitle />,
+        //     document.getElementById('example')
+        // )
         //7.获取真实的节点
         // 但是，有时需要从组件获取真实 DOM 的节点，这时就要用到 ref 属性（查看 demo07 ）。
-        var MyComponent = React.createClass({
-            handleClick:function(){
-                this.refs.myTextInput.focus();
-            },
-            render:function(){
+        class MyComponent extends React.Component{
+            constructor(props){
+                super(props);
+                this.handleClick = this.handleClick.bind(this);
+            }
+            render(){
                 return (
                     <div>
-                        <input type='text' ref='myTextInput'/>
+                        <input type='text' ref='myText'/>
                         <input type='button' value='点击跳转到上面' onClick={this.handleClick}/>
                     </div>
                 );
             }
-        });
+            
+            handleClick(){
+                console.log()
+                this.refs.myText.focus();
+            };
+        };
         ReactDOM.render(
             <MyComponent/>,
             document.getElementById('example')
         )
 
         //8. this.state 类似微信小程序的setData的方式
-        var LikeButton = React.createClass({
-            getInitialState:function(){
+        class LikeButton extends React.Component{
+            // constructor(props){
+            //     super(props);
+            //     this.liked = false
+            // }
+            getInitialState(){
                 return {liked:false}
-            },
-            handleClick:function(event){
+            }
+            handleClick(event){
                 this.setState({liked:!this.state.liked});
-            },
-            render:function(){
+            }
+            render(){
                 var text = this.state.liked?'like':'haven\'t liked';
                 return (
                     <p onClick={this.handleClick}>
@@ -124,7 +143,7 @@
                     </p>
                 )
             }
-        })
+        }
         ReactDOM.render(
             <LikeButton />,
             document.getElementById('example')
