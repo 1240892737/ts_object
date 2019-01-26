@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import myHttp from "./http/http";
+
 Vue.config.productionTip = false;
 Vue.prototype.myHttp = myHttp;
 new Vue({

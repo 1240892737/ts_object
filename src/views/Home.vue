@@ -1,7 +1,7 @@
-  <template>
+<template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <button @click="setIsShow">asda</button>
+    <router-view/>
   </div>
 </template>
 
@@ -13,6 +13,16 @@ export default {
   name: "home",
   components: {
     HelloWorld
-  }
+  },
+  methods: {
+    setIsShow(){
+      this.$emit('setShow',true);
+    }
+  },
+  props:['tabberShow']
 };
 </script>
+<style lang="less">
+
+</style>
+

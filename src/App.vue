@@ -1,31 +1,60 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <Tabber ref="tabber" :is-show="tabberShow" @setShow="setTabberShow" @openLogin="openLogin"></Tabber>
+    <Home :tabberShow="tabberShow" @setShow="setTabberShow"></Home>
+    <LoginDia @success="loginSuccess" @closeDia="openLogin" v-if="loginShow"></LoginDia>
   </div>
 </template>
-
+<script>
+import Tabber from '@/views/Tabber.vue';
+import Home from '@/views/Home.vue';
+import LoginDia from './components/LoginDia.vue';
+export default {
+  data() {
+    return {
+      tabberShow:false,
+      loginShow: false,
+    }
+  },
+  components:{
+    Tabber,Home,LoginDia
+  },
+  methods: {
+    loginSuccess(){
+      this.tabberShow = false;
+      this.loginShow = false;
+      this.$refs.tabber.isOnline();
+    },
+    setTabberShow(res){
+      this.tabberShow = res;
+    },
+    openLogin(res){
+      this.loginShow = res;
+    },
+  },
+  created(){
+    this.$store.dispatch('setOnline',{});
+  }
+}
+</script>
 <style>
+@import './assets/iconfont/iconfont.css';
+*{margin: 0;padding: 0}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #333333;
 }
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.close{
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 22px;
+  cursor: pointer;
 }
 </style>
