@@ -1,7 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Recommend from "@/pages/Recommend.vue";
-
+// import Recommend from "@/pages/Recommend.vue";
+import FindSong from "@/pages/FindSong.vue";
+const Recommend =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/Recommend.vue");
+const SongSheet =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/SongSheet.vue");
 Vue.use(Router);
 
 export default new Router({
@@ -10,8 +12,21 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Recommend
+      name: "findSong",
+      component: FindSong,
+      redirect:'/recommend',
+      children: [
+        {
+          path: "recommend",
+          name: "recommend",
+          component: Recommend
+        },
+        {
+          path: "songSheet",
+          name: "songSheet",
+          component: SongSheet
+        },
+      ]
     },
     // {
     //   path: "/about",
