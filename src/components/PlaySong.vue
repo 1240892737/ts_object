@@ -153,7 +153,7 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 80px;
+  height: 70px;
   background: white;
   z-index: 3;
   overflow: hidden;
@@ -164,13 +164,13 @@ export default {
   .songImg{
     display: inline-block;
     position: relative;
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     margin-left: 5px;
     .songImgUrl{
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
     }
     .songShade{
       width: 70px;
