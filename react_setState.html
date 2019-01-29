@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///C:/Users/wwx/Desktop/123/ts_object/react_setState.html -->
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- 生产环境中不建议使用 -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+      ul .selected {
+        color: #f06;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <ul tabindex="0">
+        <li class="">State.</li>
+        <li class="selected">Should.</li>
+        <li class="">Be.</li>
+        <li class="">Synchronous.</li>
+      </ul>
+    </div>
+    <script type="text/babel">
+ class Select extends React.Component {
+        constructor(props, context) {
+            super(props, context)
+            this.state = {
+                selection: props.values[0]
+            };
+        }
+  
+        render() {
+            return (
+            <ul onKeyDown={this.onKeyDown} tabIndex={0}>
+                {this.props.values.map(value =>
+                <li
+                    className={value === this.state.selection ? 'selected' : ''}
+                    key={value}
+                    onClick={() => this.onSelect(value)}
+                >
+                    {value}
+                </li> 
+                )}  
+            </ul>
+            )
+        }
+        
+        onSelect(value) {
+            this.setState({
+                selection: value
+            },this.fireOnSelect)
+            // this.fireOnSelect()
+    //   setTimeout(, 0);
+        }
+
+        onKeyDown = (e) => {
+            const {values} = this.props
+            const idx = values.indexOf(this.state.selection)
+            if (e.keyCode === 38 && idx > 0) { /* up */
+            this.setState({
+                selection: values[idx - 1]
+            })
+            } else if (e.keyCode === 40 && idx < values.length -1) { /* down */
+            this.setState({
+                selection: values[idx + 1]
+            })  
+            }
+            this.fireOnSelect()
+        }
+        
+        fireOnSelect() {
+            if (typeof this.props.onSelect === "function")
+                this.props.onSelect(this.state.selection) /* not what you expected..*/
+        }
+        }
+
+        ReactDOM.render(
+        <Select 
+            values={["State.", "Should.", "Be.", "Synchronous."]} 
+            onSelect={value => console.log(value)}
+        />,
+        document.getElementById("app")
+        )
+
+      ReactDOM.render(
+        <Select
+          values={["State.", "Should.", "Be.", "Synchronous."]}
+          onSelect={value => console.log(value)}
+        />,
+        document.getElementById("app")
+      );
+      // onSelect 方法永远传递的是之前的 state.selection 值，因为当 fireOnSelect 调用的时候， setState 还没有完成它的工作。
+
+      // setState 是不保证同步的
+      // setState 是不保证同步的，是不保证同步的，是不保证同步的。
+      //1.使用回调函数
+      // this.setState({
+      //     selection: value
+      // }, this.fireOnSelect)
+      //2.使用setTimeout
+      // this.setState({
+      //     selection: value
+      // });
+      // setTimeout(this.fireOnSelect, 0);
+
+      // 和渲染无关的状态尽量不要放在 state 中来管理
+      // 通常 state 中只来管理和渲染有关的状态 ，从而保证 setState 改变的状态都是和渲染有关的状态。这样子就可以避免不必要的重复渲染。其他和渲染无关的状态，可以直接以属性的形式保存在组件中，在需要的时候调用和改变，不会造成渲染。
+
+      // 避免不必要的修改，当 state 的值没有发生改变的时候，尽量不要使用 setState 。虽然 shouldComponentUpdate 和 PureComponent 可以避免不必要的重复渲染，但是还是增加了一层 shallowEqual 的调用，造成多余的浪费。
+    </script>
+  </body>
+</html>

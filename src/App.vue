@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Tabber ref="tabber" :is-show="tabberShow" @setShow="setTabberShow" @openLogin="openLogin"></Tabber>
-    <Home :tabberShow="tabberShow" @setShow="setTabberShow"></Home>
-    <LoginDia @success="loginSuccess" @closeDia="openLogin" v-if="loginShow"></LoginDia>
+    <Tabber :myProfile="myProfile" @logonOut="logonOut"></Tabber>
+    <Home :myProfile="myProfile"></Home>
+    <LoginDia></LoginDia>
   </div>
 </template>
 <script>
@@ -12,29 +12,41 @@ import LoginDia from './components/LoginDia.vue';
 export default {
   data() {
     return {
-      tabberShow:false,
-      loginShow: false,
+      myProfile:''
     }
   },
   components:{
     Tabber,Home,LoginDia
   },
-  methods: {
-    loginSuccess(){
-      this.tabberShow = false;
-      this.loginShow = false;
-      this.$refs.tabber.isOnline();
-    },
-    setTabberShow(res){
-      this.tabberShow = res;
-    },
-    openLogin(res){
-      this.loginShow = res;
-    },
+  computed: {
   },
-  created(){
-    this.$store.dispatch('setOnline',{});
-  }
+  methods: {
+    isOnline(){
+      var th = this;
+      var uid = window.localStorage.getItem('uid');
+      if(uid){
+        this.myHttp.get('/apis/user/detail?uid='+uid,(res)=>{
+          th.myProfile = res.data.profile;
+        })
+      }
+    },
+    logonOut(){
+      this.myProfile = '';
+    }
+  },
+  mounted() {
+    this.isOnline();
+    // this.myProfile = {nickname:'asd'}
+  },
+  watch: {
+    '$store.state.uid':function(newVal,oldVal){
+      if(newVal){
+        this.isOnline();
+      }else{
+        console.log('登录失败')
+      }
+    }
+  },
 }
 </script>
 <style>

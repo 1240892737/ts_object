@@ -7,24 +7,37 @@ export default new Vuex.Store({
   state: {
     online:false,
     uid:'',
-    nickname:'',
-    avatarUrl:''
+    tabberShow: false,
+    loginShow: false,
+    bgUrl:"../../public/mascot2.jpg",
   },
   mutations: {
-  },
-  actions: {
-    setOnline(th,res){
-      var res = res || '';
-      let storage=window.localStorage;
+    SET_TABBERSHOW(state,res){
+      state.tabberShow = res;
+    },
+    SET_LOGINSHOW(state,res){
+      state.loginShow = res;
+    },
+    setOnline(state){
+      let storage = window.localStorage;
       if(storage.getItem("uid")){
-        this.online = true;
-        this.uid = storage.getItem("uid");
-        this.nickname = res.nickname;
-        this.avatarUrl = res.avatarUrl;
+        state.online = true;
+        state.uid = storage.getItem("uid");
       }else{
-        this.online = false;
-        this.uid = '';
+        state.online = false;
+        state.uid = '';
       }
     },
+    
+  },
+  actions: {
+    successLogin(state){
+      state.commit('SET_LOGINSHOW',false);
+      state.commit('SET_TABBERSHOW',false);
+      state.commit('setOnline');
+    },
+    setTabberShow(context,res){
+      context.commit('SET_TABBERSHOW',res)
+    }
   }
 });

@@ -1,6 +1,7 @@
 // console.log(process.env)
 module.exports = {
   lintOnSave: false,
+  assetsDir: "static",
   devServer: {
       port: 8000,
       proxy: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="shade">
+  <div class="shade" v-if="loginShow">
     <div class="loginDia">
       <div class="login-bg"></div>
       <div class="dia-content">
@@ -60,17 +60,15 @@ export default {
             //邮箱登录
             this.myHttp.getEmail(this.uid,this.pwd,(res)=>{
               window.localStorage.setItem('uid',res.data.account.id);
-              this.$store.dispatch('setOnline',res.data.profile);
-              this.$emit('success')
+              th.$store.dispatch('successLogin');
             }).catch((error)=>{
               th.error_log = true;
             })
           }else{
             //手机登录
             this.myHttp.getPhone(this.uid,this.pwd,(res)=>{
-              window.localStorage.setItem('uid',res.data.account.id)
-              this.$store.dispatch('setOnline',res.data.profile);
-              this.$emit('success')
+              window.localStorage.setItem('uid',res.data.account.id);
+              th.$store.dispatch('successLogin');
             }).catch((error)=>{
               th.error_log = true;
             })
@@ -81,10 +79,14 @@ export default {
       }
     },
     closeLogin(){
-      console.log(1)
-      this.$emit('closeDia',false);
+      this.$store.commit('SET_LOGINSHOW',false);
     }
-  }
+  },
+  computed: {
+    loginShow(){
+      return this.$store.state.loginShow;
+    }
+  },
 }
 </script>
 
@@ -94,7 +96,7 @@ export default {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: 100%;
+    width: 85%;
     max-width: 500px;
     height: 300px;
     border-radius: 6px;

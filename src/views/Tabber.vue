@@ -1,15 +1,15 @@
 <template>
-  <transition name="shade" v-if="isShow">
+  <transition name="shade" v-if="tabberShow">
     <div class="shade">
       <div class="tabber">
         <div class="message">
-          <div class="Myimg" v-if="!Myimg">
+          <div class="Myimg" v-if="!myProfile">
             <img src="../../public/mascot1.jpg" alt="" class="headImg">
             <div class="login-btn" @click="openLogin">登录</div>
           </div>
           <div class="Myimg" v-else>
-            <img :src="Myimg" alt="" class="headImg">
-            <div class="login-name">欢迎你,{{uidName}}!</div>
+            <img :src="myProfile.avatarUrl" alt="" class="headImg">
+            <div class="login-name">欢迎你,{{myProfile.nickname}}! <span class="logonOut" @click="logonOut">退出</span> </div>
           </div>
         </div>
         <span class="iconfont close" @click="closeTabber">&#xe6b7;</span>
@@ -24,50 +24,42 @@ export default {
     return {
       aa:'',
       bb:'',
-      Myimg: '',
-      uidName:'',
     }
   },
-  props:{
-    isShow:{
-      type: Boolean,
-      default: true
+  props:['myProfile'],
+  computed: {
+    tabberShow:function(){
+      return this.$store.state.tabberShow;
     }
   },
   methods: {
-    isOnline(){
-      var uid = window.localStorage.getItem('uid');
-      if(uid){
-        this.myHttp.get('/apis/user/detail?uid='+uid,(res)=>{
-          console.log(res.data);
-          this.$store.dispatch('setOnline',res.data.profile);
-          this.Myimg = this.$store.avatarUrl;
-          this.uidName = this.$store.nickname;
-        })
-      }
-    },
     openLogin(){
-      this.$emit('openLogin',true)
+      this.$store.commit('SET_LOGINSHOW',true);
     },
     closeTabber(){
-      this.$emit('setShow',false)
+      this.$store.commit('SET_TABBERSHOW',false);
+    },
+    logonOut(){
+      this.myHttp.get('/apis/logout',(res)=>{
+        if(res.data.code == 200){
+          window.localStorage.removeItem('uid');
+          this.$store.dispatch('successLogin');
+          this.$emit('logonOut')
+        }
+      })
     },
   },
   components:{
     
   },
   created(){
-    // this.myHttp.getSongUrl([405998841,33894312],function(res){
-    //   console.log(res)
-    // });
-    this.isOnline();
   },
   mounted() {
     var th = this;
-    this.myHttp.get('/apis/playlist/detail?id=24381616',(res,req)=>{
-      // console.log(res.data.playlist.coverImgUrl)
-      th.aa = res.data.playlist.coverImgUrl;
-    })
+    // this.myHttp.get('/apis/playlist/detail?id=24381616',(res,req)=>{
+    //   // console.log(res.data.playlist.coverImgUrl)
+    //   th.aa = res.data.playlist.coverImgUrl;
+    // })
     // this.myHttp.get('/apis/song/url?id=24381618',(res,req)=>{
     //   console.log(res.data.data[0])
     //   // th.bb = res.data.playlist.coverImgUrl;
@@ -75,8 +67,7 @@ export default {
     window.addEventListener('click',(e)=>{
       if(e.target.className == 'shade'){
         // console.log(th.isShow)
-        th.$emit('setShow',false)
-        this.$emit('loginSuccess')
+        this.$store.commit('SET_TABBERSHOW',false);
       }
     })
   },
@@ -84,8 +75,7 @@ export default {
     window.removeEventListener('click',(e)=>{
       if(e.target.className == 'shade'){
         // console.log(th.isShow)
-        th.$emit('setShow',false)
-        this.$emit('loginSuccess')
+        this.$store.commit('SET_TABBERSHOW',false);
       }
     });
   }
@@ -100,6 +90,7 @@ export default {
     top: 0;
     width: 100%;
     height: 100%;
+    z-index: 5;
     .tabber{
       position: absolute;
       left: 0;
@@ -117,6 +108,12 @@ export default {
         height: 120px;
         margin: 20px auto;
         border-radius: 50%;
+      }
+      .logonOut{
+        margin-left: 20px;
+        color: @bg_wo;
+        cursor: pointer;
+        font-size: 12px;
       }
     }
   }
