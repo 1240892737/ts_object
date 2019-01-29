@@ -10,7 +10,8 @@ export default new Vuex.Store({
     tabberShow: false,
     loginShow: false,
     bgUrl:"../../public/mascot2.jpg",
-    
+    songUrl:'',
+    songId:'',
   },
   mutations: {
     SET_TABBERSHOW(state,res){
@@ -29,6 +30,12 @@ export default new Vuex.Store({
         state.uid = '';
       }
     },
+    setSongUrl(state,songUrl){
+      state.songUrl = songUrl;
+    },
+    setSongId(state,songId){
+      state.songId = songId;
+    }
     
   },
   actions: {
