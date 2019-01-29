@@ -7,7 +7,7 @@
         <label class="input-group"><span>密码：</span><div><input type="password" @keydown.enter="login_btn" v-model="pwd" class="input_text"><span class="error" v-show="false">信息错误</span></div></label>
         <div class="login-btn" @click="login_btn">登录</div>
       </div>
-      <span class="iconfont close" @click="closeLogin">&#xe6b7;</span> 
+      <span class="iconfont close icon-close_icon" @click="closeLogin"></span> 
     </div>
   </div>
 </template>

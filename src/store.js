@@ -10,6 +10,7 @@ export default new Vuex.Store({
     tabberShow: false,
     loginShow: false,
     bgUrl:"../../public/mascot2.jpg",
+    
   },
   mutations: {
     SET_TABBERSHOW(state,res){

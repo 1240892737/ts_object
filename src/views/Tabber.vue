@@ -12,7 +12,7 @@
             <div class="login-name">欢迎你,{{myProfile.nickname}}! <span class="logonOut" @click="logonOut">退出</span> </div>
           </div>
         </div>
-        <span class="iconfont close" @click="closeTabber">&#xe6b7;</span>
+        <span class="iconfont close icon-close_icon" @click="closeTabber"></span>
       </div>
     </div>
   </transition>

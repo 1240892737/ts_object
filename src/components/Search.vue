@@ -1,7 +1,7 @@
 <template>
   <div class="search-con">
     <input type="text" id="search-input" placeholder="搜索音乐，视频，歌词，电台">
-    <span class="iconfont icon-search search-btn"></span>
+    <span class="iconfont icon-search_icon search-btn"></span>
   </div>
 </template>
 <script>

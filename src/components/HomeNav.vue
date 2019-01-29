@@ -1,7 +1,7 @@
 <template>
   <div class="homeNav">
     <div class="navLeft">
-        <router-link to="/" class="logo111"><span class="iconfont icon-category" @click="setTabber"></span><img src="../../public/logo1.png"></router-link>
+        <router-link to="/" class="logo111"><span class="iconfont icon-list_icon" @click="setTabber"></span><img src="../../public/logo1.png"></router-link>
         <Search></Search>
     </div>
     <div class="navRight">
@@ -29,7 +29,6 @@ export default {
   watch: {
       myProfile:function(a){
           this.myProfile = a;
-            console.log(this.myProfile)
       }
   },
   methods: {
