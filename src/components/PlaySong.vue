@@ -2,23 +2,24 @@
   <div class="playSong">
     <div class="songDetail">
       <div class="songImg">
-        <img src="" class="songImgUrl">
+        <img :src="songImg" class="songImgUrl">
         <div class="songShade">
           <span class="iconfont icon-amplification_icon"></span>
         </div>
       </div>
       <div class="song">
-        <div class="songName">adsaaaaaaaaaaaaa</div>
-        <div class="songWriter">asd</div>
+        <div class="songName">{{ songName }}</div>
+        <div class="songWriter">{{ songWriter }}</div>
       </div>
     </div>
+    <!-- 上一首/下一首 -->
     <div class="handleSong">
-      <div class="prevSong song-btn"><span class="iconfont icon-zshangyishou"></span></div>
-      <div class="pause song-btn" @click="pause_btn">
+      <div class="prevSong song-btn" @click="nextPrevSong(-1)"><span class="iconfont icon-zshangyishou"></span></div>
+      <div class="pause song-btn" @click="pause_btn(!pause)">
         <span class="iconfont icon-zbofang" v-show="!pause"></span>
         <span class="iconfont icon-zzanting" v-show="pause"></span>
       </div>
-      <div class="nextSong song-btn"><span class="iconfont icon-zxiayishou"></span></div>
+      <div class="nextSong song-btn" @click="nextPrevSong(1)"><span class="iconfont icon-zxiayishou"></span></div>
     </div>
     <div class="songPlan">
       <div class="nowTime">{{ currentTime }}</div>
@@ -35,7 +36,7 @@
       </div>
     </div>
     <!-- 播放顺序 -->
-    <span class="iconfont icon-suijibofang songOrder"></span>
+    <span @click="setSongOrder" :class="{'iconfont':true,'songOrder':true,'icon-suijibofang':songOrder==3,'icon-danquxunhuan':songOrder==2,'icon-xunhuanbofang':songOrder==1}"></span>
     <!-- preload在页面加载加载音频 -->
     <audio :src="songUrl" type="audio/mp3" autoplay="autoplay" class="audioWo" ref="myAudio"></audio>
   </div>
@@ -50,36 +51,35 @@ export default {
       duration: '04:00',
       progressW: '0',
       songVolume: '50',
+      songName: 'aaaaa',
+      songWriter: 'asd',
+      songImg:'',
+      songOrder: 1,//1是顺序播放，2是单曲循环，3是随机播放
     }
   },
   methods: {
-    pause_btn(){
+    pause_btn(bool){
       var self = this;
-      if(self.pause){
-        this.$refs.myAudio.pause();
+      if(bool){
+        self.$refs.myAudio.play();
+        self.pause = true;
       }else{
-        this.$refs.myAudio.play();
+        self.$refs.myAudio.pause();
+        self.pause = false;
       }
-      self.pause = !self.pause;
     },
     myAudioPlan(myAudio){
       // console.log(myAudio.currentTime)
       let currentString = this.timerdispose(myAudio.currentTime);
       let duration = this.timerdispose(myAudio.duration);
       let progressW = (myAudio.currentTime/myAudio.duration).toFixed(4)*100;
-      // console.log(currentString)
-      // if(this.duration!=duration){
-      //   this.duration = duration;
-      // }
       if(currentString != this.currentTime){
         this.currentTime = currentString;
         this.progressW = progressW;
       }
-      //播放结束
-      if(myAudio.duration-1 <= myAudio.currentTime){
-        this.pause_btn();
-      }
+      if(myAudio.currentTime>myAudio.duration-0.4) this.nextPrevSong(1,true);
     },
+    //处理音频时间
     timerdispose(currentTime){
       currentTime = Math.floor(currentTime);
       let currentMinute = Math.floor(currentTime/60);
@@ -88,6 +88,7 @@ export default {
       if(currentSec<10) currentSec = '0'+currentSec;
       return currentMinute +':'+ currentSec;
     },
+    //音乐进度点击事件
     progressClick(e){
       let myAudio = this.$refs.myAudio;
       let progress = this.$refs.progress;
@@ -96,18 +97,84 @@ export default {
       this.progressW = (currentX/progress.clientWidth).toFixed(4)*100;
       // console.log(this.progressW * myAudio.duration)
       myAudio.currentTime = (this.progressW * myAudio.duration/100).toFixed(2);
-      this.pause = false;
-      this.pause_btn();
+      this.pause_btn(true);
     },
+    //音量点击事件
     audioVolume(e){
       let myAudio = this.$refs.myAudio;
       let audioVolume = this.$refs.audioVolume;
       let currentX = e.clientX-audioVolume.parentNode.offsetLeft-58;
       // this.progressW*myAudio.duration;
       this.songVolume = (currentX/audioVolume.clientWidth).toFixed(4)*100;
-      console.log(this.songVolume)
+      // console.log(this.songVolume)
       // console.log(this.progressW * myAudio.duration)
       myAudio.volume = (this.songVolume/100).toFixed(2);
+    },
+    //切歌
+    closerSong(url,id){
+      this.$store.commit('setSongUrl',url);
+      this.$store.commit('setSongId',id);
+      this.myFun.setSession({id:id,url:url})
+    },
+    // 下一首歌
+    nextPrevSong(w,auto){
+      let index = 0;
+      let songList = this.$store.state.songList;
+      let myAudio = this.$refs.myAudio;
+      var auto = auto || false;
+      myAudio.currentTime = 0;
+      this.currentTime = "00:00";
+      this.progressW = "0";
+      if(this.songOrder == 3){
+        index = Math.floor(Math.random() * songList.length);
+      }else{
+        if(auto && this.songOrder == 2){
+          return;
+        }else{
+          //找出现在歌曲的下标
+          songList.forEach((v,i)=>{
+            if(v.id == this.$store.state.songId) index = i;
+          });
+          if(w>0){//下一首
+            if(index >= songList.length-1){
+              index=0;
+            }
+            else index++;
+          }else{
+            if(index == 0) index=songList.length-1;
+            else index--
+          }
+        }
+      }
+      // console.log(songList)
+      let indexUrl = songList[index].url;
+      let indexId = songList[index].id;
+      this.closerSong(indexUrl,indexId);
+    },
+    
+    //修改路径
+    setSongOrder(){
+      this.songOrder++;
+      if(this.songOrder>3) this.songOrder=1;
+    },
+    //监听songUrl的事件
+    songUrlWacth(){
+      if(this.$store.state.songId){
+        this.myHttp.getSongDetail(this.$store.state.songId,(res)=>{
+          // console.log(res.data)
+          if(res.data.songs.length == 1){
+            
+            this.songName = res.data.songs[0].name;
+            this.songImg = res.data.songs[0].al.picUrl;
+            this.songWriter = res.data.songs[0].ar.map(v=>v.name).join('/') ;
+            this.$store.commit('setBgUrl',res.data.songs[0].al.picUrl);
+            window.localStorage.setItem('songUrl',this.$store.state.songUrl);
+            window.localStorage.setItem('songId',this.$store.state.songId);
+            this.pause_btn(true)
+          }
+          // console.log(this.$store.state.songList);
+        })
+      }
     }
   },
   computed: {
@@ -119,11 +186,19 @@ export default {
       return this.$store.state.songUrl;
     }
   },
+  watch: {
+    '$store.state.songUrl':function(newVal,oldVal){
+      // console.log(this.$store.state.songId)
+      this.songUrlWacth();
+      return newVal;
+    },
+  },
   created() {
-    this.myHttp.getSongUrl('33894312',(res)=>{
-      console.log(res.data.data[0])
-      this.$store.commit('setSongUrl',res.data.data[0].url);
-    });
+    //保存并且创建第一歌曲记录
+    let session = window.sessionStorage;
+    let localStorage = window.localStorage;
+    // console.log(window.sessionStorage.getItem("playList"))
+    this.closerSong(window.localStorage.getItem('songUrl'),window.localStorage.getItem('songId'));
   },
   mounted() {
     var myAudio = this.$refs.myAudio;
@@ -135,8 +210,9 @@ export default {
       myAudio.ontimeupdate = ()=>{
         this.myAudioPlan(myAudio)
       };
-      myAudio.pause();
-    }
+      this.songUrlWacth();
+    };
+    //用来保存随机播放的路径
   },
 }
 </script>
@@ -153,7 +229,7 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 70px;
+  height: 80px;
   background: white;
   z-index: 3;
   overflow: hidden;
@@ -164,17 +240,20 @@ export default {
   .songImg{
     display: inline-block;
     position: relative;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     cursor: pointer;
-    margin-left: 5px;
     .songImgUrl{
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
+      margin-left: 1px;
     }
     .songShade{
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      height: 80px;
+      .iconfont{
+        color: white;
+      }
     }
     .iconfont{
       display: none;
@@ -193,12 +272,12 @@ export default {
       display: block;
   }
   .songDetail{
-    max-width: 200px;
+    max-width: 240px;
     display: flex;
     justify-content: center;
     border-right: 1px solid rgba(0, 0, 0, .2);
     .song{
-      max-width: 100px; 
+      width: 120px; 
       line-height: 25px;
       margin: 5px 10px;
       text-align: left;

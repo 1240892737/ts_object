@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img class="bg-div" :src="bgUrl" v-if="!bgUrl"/>
+    <img class="bg-div" :src="bgUrl" v-if="bgUrl"/>
     <img class="bg-div" src="../../public/mascot2.jpg" v-else/>
     <div class="content">
       <HomeNav :myProfile="myProfile"></HomeNav>
@@ -47,7 +47,7 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 1;
-    .fliter_blur(60px);
+    .fliter_blur(40px);
   }
   .content{
     position: absolute;
@@ -56,6 +56,8 @@ export default {
     width: 100%;
     z-index: 2;
     background: transparent;
+    box-sizing: border-box;
+    padding-top: 50px;
   }
 </style>
 

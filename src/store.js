@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
+import axios from "./http/http";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -9,9 +9,10 @@ export default new Vuex.Store({
     uid:'',
     tabberShow: false,
     loginShow: false,
-    bgUrl:"../../public/mascot2.jpg",
+    bgUrl:"",
     songUrl:'',
     songId:'',
+    songList:[],
   },
   mutations: {
     SET_TABBERSHOW(state,res){
@@ -35,8 +36,16 @@ export default new Vuex.Store({
     },
     setSongId(state,songId){
       state.songId = songId;
-    }
-    
+    },
+    setSongList(state,songLists){
+      state.songList = songLists;
+    },
+    randomSong(){
+
+    },
+    setBgUrl(state,bgUrl){
+      state.bgUrl = bgUrl;
+    },
   },
   actions: {
     successLogin(state){
@@ -46,6 +55,19 @@ export default new Vuex.Store({
     },
     setTabberShow(context,res){
       context.commit('SET_TABBERSHOW',res)
-    }
+    },
+    
+    setSongList(state,songlists,index){
+      var index = index || Math.floor(Math.random() * songlists.length);
+      index = parseInt(index)
+      // console.log(songlists[index])
+      let songUrls = songlists.map(v=>v.id);
+      axios.getSongUrl(songUrls,(res)=>{
+        state.commit('setSongList',res.data.data)
+        state.commit('setSongUrl',res.data.data[index].url)
+        state.commit('setSongId',res.data.data[index].id)
+        // console.log(songlists[index])
+      });
+    },
   }
 });

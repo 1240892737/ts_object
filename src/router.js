@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
 // import Recommend from "@/pages/Recommend.vue";
-import FindSong from "@/pages/FindSong.vue";
-const Recommend =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/Recommend.vue");
-const SongSheet =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/SongSheet.vue");
+import FindSong from "@/pages/findSong/FindSong.vue";
+const Recommend =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/findSong/Recommend.vue");
+const SongSheet =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/findSong/SongSheet.vue");
 Vue.use(Router);
 
 export default new Router({

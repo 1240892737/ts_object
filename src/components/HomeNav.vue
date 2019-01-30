@@ -50,6 +50,10 @@ export default {
 <style lang='less'>
 @import '../less/index.less';
 .homeNav{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
     background: @bg_wo;
     height: 50px;
     display: flex;

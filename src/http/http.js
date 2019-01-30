@@ -12,9 +12,9 @@ const f = {
     },
     getSongDetail(uid,success){
         if(typeof uid == "string"||typeof uid == "number"){
-            return f.get("./apis/song/detail?id="+uid,success);
+            return f.get("/apis/song/detail?ids="+uid,success);
         }else{
-            return f.get("./apis/song/detail?id="+uid.join(','),success);
+            return f.get("/apis/song/detail?ids="+uid.join(','),success);
         }
     },
     getPhone:(phone,pwd,success) => {
