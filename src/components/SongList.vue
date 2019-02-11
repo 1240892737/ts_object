@@ -1,12 +1,12 @@
 <template>
-  <div class="songItem">
+  <div class="songItem" @click="getPlayList(listId)">
     <div class="item-content">
         <slot name="img-list"></slot>
         <div class="list-text-item">
             <slot name="list-text"></slot>
         </div>
         <div class="playCounts"><span class="iconfont icon-erji"></span>{{playCount | playCounts}}</div>
-        <div class="icon-btns" @click="playLists">
+        <div class="icon-btns" @click.stop="playLists">
             <span class="iconfont icon-zbofang"></span>
         </div>
     </div>
@@ -27,7 +27,13 @@ export default {
             // console.log(res.data.data[0].url)
             // console.log(res.data.privileges)
             this.$store.dispatch('setSongList',res.data.privileges);
+            console.log(res.data);
         })
+    },
+    getPlayList(uid){
+        this.$router.push({
+            path: `/playlist/${uid}`
+        });
     }
   },
   filters: {

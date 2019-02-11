@@ -5,9 +5,9 @@ const f = {
     },
     getSongUrl:(uid,success) => {
         if(typeof uid == "string"||typeof uid == "number"){
-            return f.get("./apis/song/url?id="+uid,success);
+            return f.get("/apis/song/url?id="+uid,success);
         }else{
-            return f.get("./apis/song/url?id="+uid.join(','),success);
+            return f.get("/apis/song/url?id="+uid.join(','),success);
         }
     },
     getSongDetail(uid,success){
@@ -18,10 +18,13 @@ const f = {
         }
     },
     getPhone:(phone,pwd,success) => {
-        return f.get("./apis/login/cellphone?phone="+phone+"&password="+pwd,success);
+        return f.get("/apis/login/cellphone?phone="+phone+"&password="+pwd,success);
     },
     getEmail:(email,pwd,success) => {
-        return f.get("./apis/login?email="+email+"&password="+pwd,success);
+        return f.get("/apis/login?email="+email+"&password="+pwd,success);
+    },
+    getPlayList:(uid,success) => {
+        return f.get("/apis/playlist/detail?id="+uid,success);
     },
 }
 export default f;

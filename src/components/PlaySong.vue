@@ -70,23 +70,14 @@ export default {
     },
     myAudioPlan(myAudio){
       // console.log(myAudio.currentTime)
-      let currentString = this.timerdispose(myAudio.currentTime);
-      let duration = this.timerdispose(myAudio.duration);
+      let currentString = this.myFun.timerdispose(myAudio.currentTime);
+      let duration = this.myFun.timerdispose(myAudio.duration);
       let progressW = (myAudio.currentTime/myAudio.duration).toFixed(4)*100;
       if(currentString != this.currentTime){
         this.currentTime = currentString;
         this.progressW = progressW;
       }
       if(myAudio.currentTime>myAudio.duration-0.4) this.nextPrevSong(1,true);
-    },
-    //处理音频时间
-    timerdispose(currentTime){
-      currentTime = Math.floor(currentTime);
-      let currentMinute = Math.floor(currentTime/60);
-      if(currentMinute<10) currentMinute = '0'+currentMinute;
-      let currentSec = Math.floor(currentTime%60);
-      if(currentSec<10) currentSec = '0'+currentSec;
-      return currentMinute +':'+ currentSec;
     },
     //音乐进度点击事件
     progressClick(e){
@@ -181,7 +172,7 @@ export default {
     songUrl:function(){
       if(this.$refs.myAudio){
         let myAudio = this.$refs.myAudio;
-        this.duration = this.timerdispose(myAudio.duration);
+        this.duration = this.myFun.timerdispose(myAudio.duration);
       }
       return this.$store.state.songUrl;
     }
@@ -205,7 +196,7 @@ export default {
     if(myAudio != null){
       myAudio.load();
       myAudio.oncanplay = () => {  
-        this.duration = this.timerdispose(myAudio.duration);
+        this.duration = this.myFun.timerdispose(myAudio.duration);
       }
       myAudio.ontimeupdate = ()=>{
         this.myAudioPlan(myAudio)

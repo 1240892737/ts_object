@@ -69,4 +69,14 @@ export default {
   font-size: 22px;
   cursor: pointer;
 }
+.recommend{
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 100px;
+  .songList{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+}
 </style>
