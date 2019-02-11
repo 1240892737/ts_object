@@ -38,7 +38,7 @@
     <!-- 播放顺序 -->
     <span @click="setSongOrder" :class="{'iconfont':true,'songOrder':true,'icon-suijibofang':songOrder==3,'icon-danquxunhuan':songOrder==2,'icon-xunhuanbofang':songOrder==1}"></span>
     <!-- preload在页面加载加载音频 -->
-    <audio :src="songUrl" type="audio/mp3" autoplay="autoplay" class="audioWo" ref="myAudio"></audio>
+    <audio :src="songUrl" type="audio/mp3" autoplay="autoplay" loop class="audioWo" ref="myAudio"></audio>
   </div>
 </template>
 <script>
@@ -68,6 +68,7 @@ export default {
         self.pause = false;
       }
     },
+    // audio播放函数
     myAudioPlan(myAudio){
       // console.log(myAudio.currentTime)
       let currentString = this.timerdispose(myAudio.currentTime);
@@ -146,12 +147,10 @@ export default {
           }
         }
       }
-      // console.log(songList)
       let indexUrl = songList[index].url;
       let indexId = songList[index].id;
       this.closerSong(indexUrl,indexId);
     },
-    
     //修改路径
     setSongOrder(){
       this.songOrder++;
@@ -160,16 +159,17 @@ export default {
     //监听songUrl的事件
     songUrlWacth(){
       if(this.$store.state.songId){
+        // console.log(this.$store.state.songId)
         this.myHttp.getSongDetail(this.$store.state.songId,(res)=>{
-          // console.log(res.data)
+          // console.log(res.data.songs.length)
           if(res.data.songs.length == 1){
-            
             this.songName = res.data.songs[0].name;
             this.songImg = res.data.songs[0].al.picUrl;
             this.songWriter = res.data.songs[0].ar.map(v=>v.name).join('/') ;
             this.$store.commit('setBgUrl',res.data.songs[0].al.picUrl);
             window.localStorage.setItem('songUrl',this.$store.state.songUrl);
             window.localStorage.setItem('songId',this.$store.state.songId);
+            // this.closerSong(this.$store.state.songUrl,this.$store.state.songId)
             this.pause_btn(true)
           }
           // console.log(this.$store.state.songList);
@@ -197,8 +197,11 @@ export default {
     //保存并且创建第一歌曲记录
     let session = window.sessionStorage;
     let localStorage = window.localStorage;
-    // console.log(window.sessionStorage.getItem("playList"))
-    this.closerSong(window.localStorage.getItem('songUrl'),window.localStorage.getItem('songId'));
+    this.closerSong(localStorage.getItem('songUrl'),parseInt(localStorage.getItem('songId')));
+    //更新歌单
+    this.myHttp.get('/apis/playlist/detail?id='+localStorage.getItem('playLists'),(res)=>{
+      this.$store.dispatch('setSongList',res.data.privileges);
+    })
   },
   mounted() {
     var myAudio = this.$refs.myAudio;

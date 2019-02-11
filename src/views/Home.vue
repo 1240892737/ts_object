@@ -57,7 +57,8 @@ export default {
     z-index: 2;
     background: transparent;
     box-sizing: border-box;
-    padding-top: 50px;
+    padding-top: 70px;
+    margin-bottom: 100px;
   }
 </style>
 

@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "./http/http";
+import myFun from "../public/function";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -56,17 +57,16 @@ export default new Vuex.Store({
     setTabberShow(context,res){
       context.commit('SET_TABBERSHOW',res)
     },
-    
     setSongList(state,songlists,index){
       var index = index || Math.floor(Math.random() * songlists.length);
       index = parseInt(index)
       // console.log(songlists[index])
       let songUrls = songlists.map(v=>v.id);
       axios.getSongUrl(songUrls,(res)=>{
-        state.commit('setSongList',res.data.data)
-        state.commit('setSongUrl',res.data.data[index].url)
-        state.commit('setSongId',res.data.data[index].id)
-        // console.log(songlists[index])
+        state.commit("setSongList",res.data.data);
+        state.commit("setSongUrl",res.data.data[index].url);
+        state.commit("setSongId",res.data.data[index].id);
+        myFun.setSession({id:res.data.data[index].id,url:res.data.data[index].url})
       });
     },
   }

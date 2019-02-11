@@ -21,20 +21,21 @@ export default {
 </script>
 
 <style lang='less'>
-    .TitleSong{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 0 10px;
-        border-bottom: 1px solid rgba(255,255,255, .5);
-        line-height: 36px;
-        .title-name{
-            font-size: 20px;
-            color: #333;
-        }
-        .title-more{
-            color: #666;
-            font-size: 14px;
-        }
+.TitleSong{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 10px;
+    border-bottom: 1px solid rgba(255,255,255, .5);
+    line-height: 42px;
+    margin-top: 10px;
+    .title-name{
+        font-size: 26px;
+        color: #333;
     }
+    .title-more{
+        color: #666;
+        font-size: 18px;
+    }
+}
 </style>

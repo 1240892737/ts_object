@@ -59,6 +59,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 99;
     .iconfont{
         color: rgba(255, 255, 255, .8);
         cursor: pointer;

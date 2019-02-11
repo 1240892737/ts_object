@@ -5,6 +5,7 @@ import store from "./store";
 import myHttp from "./http/http";
 import MyFun from "../public/function";
 
+
 Vue.config.productionTip = false;
 Vue.prototype.myHttp = myHttp;
 Vue.prototype.myFun = MyFun;

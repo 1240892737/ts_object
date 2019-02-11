@@ -1,6 +1,7 @@
 <template>
   <div class="recommend">
-    <TitleSong>
+    <Banner></Banner>
+    <TitleSong titleName="歌单">
       <div class="title-name" slot="name">推荐歌单</div>
     </TitleSong>
     <div class="songList">
@@ -10,12 +11,18 @@
         <p class="list-text" slot="list-text">{{ item.copywriter }}</p>
       </SongList>
     </div>
-    recommend
+    <TitleSong titleName="音乐">
+      <div class="title-name" slot="name">推荐音乐</div>
+    </TitleSong>
+    <NewSonts></NewSonts>
   </div>
 </template>
 <script>
 import SongList from '@/components/SongList.vue';
 import TitleSong from '@/components/TitleSong.vue';
+import Banner from '@/components/Banner.vue';
+import NewSonts from '@/components/NewSonts.vue';
+
 export default {
   name: '',
   data () {
@@ -30,10 +37,10 @@ export default {
     this.myHttp.get('/apis/personalized?limit=12',(res)=>{
       // console.log(res.data)
       this.personalizeds = res.data.result;
-    })
+    });
   },
   components:{
-    SongList,TitleSong,
+    SongList,TitleSong,Banner,NewSonts
   }
 }
 </script>
