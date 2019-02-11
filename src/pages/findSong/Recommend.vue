@@ -39,5 +39,11 @@ export default {
 </script>
 
 <style lang='less'>
-
+.recommend{
+  .songList{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+}
 </style>
