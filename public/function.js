@@ -10,6 +10,7 @@ const f = {
             return;
         }
         let playList = JSON.parse(session);
+<<<<<<< HEAD
         // console.log(playList);
         let index = 0;
         if(playList.some((v,i)=>{index=i; return obj.id == v.id;})){
@@ -17,6 +18,12 @@ const f = {
         }else{
             if(playList.length>=50) playList.shift();
         }
+=======
+        // console.log(session)
+        console.log(playList.some((v)=>{
+            return obj == v;
+        }))
+>>>>>>> 23999d760e903681947b6e003660cc1520b10bd1
         playList.push(obj);
         console.log(playList)
         window.sessionStorage.setItem("playList",JSON.stringify(playList));

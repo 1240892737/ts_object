@@ -112,6 +112,11 @@ export default {
     nextPrevSong(w,auto){
       let index = 0;
       let songList = this.$store.state.songList;
+      if(songList.length == 0){
+        songList = JSON.parse(window.sessionStorage.getItem("playList"));
+        this.$store.dispatch("setSongList",songList)
+      }
+      // console.log(songList)
       let myAudio = this.$refs.myAudio;
       var auto = auto || false;
       myAudio.currentTime = 0;
@@ -138,6 +143,11 @@ export default {
           }
         }
       }
+<<<<<<< HEAD
+=======
+      // console.log(songList)
+      console.log(index)
+>>>>>>> 23999d760e903681947b6e003660cc1520b10bd1
       let indexUrl = songList[index].url;
       let indexId = songList[index].id;
       this.closerSong(indexUrl,indexId);

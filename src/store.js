@@ -58,8 +58,11 @@ export default new Vuex.Store({
       context.commit('SET_TABBERSHOW',res)
     },
     setSongList(state,songlists,index){
-      var index = index || Math.floor(Math.random() * songlists.length);
-      index = parseInt(index)
+      // console.log(index)
+      index = index || Math.floor(Math.random() * songlists.length);
+      index = parseInt(index);
+      // console.log(songlists)
+      window.sessionStorage.setItem("playList",JSON.stringify(songlists));
       // console.log(songlists[index])
       let songUrls = songlists.map(v=>v.id);
       axios.getSongUrl(songUrls,(res)=>{
@@ -69,5 +72,8 @@ export default new Vuex.Store({
         myFun.setSession({id:res.data.data[index].id,url:res.data.data[index].url})
       });
     },
+    setSongs(){
+      
+    }
   }
 });
