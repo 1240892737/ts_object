@@ -58,8 +58,11 @@ export default new Vuex.Store({
     },
     
     setSongList(state,songlists,index){
-      var index = index || Math.floor(Math.random() * songlists.length);
-      index = parseInt(index)
+      // console.log(index)
+      index = index || Math.floor(Math.random() * songlists.length);
+      index = parseInt(index);
+      // console.log(songlists)
+      window.sessionStorage.setItem("playList",JSON.stringify(songlists));
       // console.log(songlists[index])
       let songUrls = songlists.map(v=>v.id);
       axios.getSongUrl(songUrls,(res)=>{
@@ -69,5 +72,8 @@ export default new Vuex.Store({
         // console.log(songlists[index])
       });
     },
+    setSongs(){
+      
+    }
   }
 });

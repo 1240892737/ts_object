@@ -43,6 +43,11 @@ export default {
           thELement = thELement.parentNode;
         }
       }
+      // let a = 
+      // let index = null;
+      // this.songs.forEach((item,index1)=> {if(item.id==thELement.dataset.id)index = index1});
+      // console.log(index)
+      this.$store.dispatch("setSongList",this.songs);
       // console.log(thELement)
       this.myHttp.getSongUrl(thELement.dataset.id,(res)=>{
         // console.log(res.data)
