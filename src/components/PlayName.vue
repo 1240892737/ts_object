@@ -50,17 +50,17 @@ export default {
         }
     },playlistIntroUp(e){
         let thElement = e.target.parentNode;
-        console.log(thElement)
+        // console.log(thElement)
         thElement.classList.add('playlist-intro-more')
     },
     playlis_play(){
-        console.log(1)
+        // console.log(1)
         this.$emit('playlis_play');
     },
   },
   filters: {
       playCounts: function (value) {
-        if (!value) return ''
+        if (!value) return '';
         if(value>100000){
             return Math.floor(value/10000) + '万';
         }

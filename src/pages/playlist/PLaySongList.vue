@@ -10,7 +10,7 @@
     </div>
     <div class="pLaySongList-item pLaySongList-songs" @dblclick.stop="songsDblclick($event)" v-for="(item,index) in songs" :data-id="item.id" :key="index">
       <div class="serial-number">
-        <span v-if="item.id != songId">{{ index | padStart}}</span>
+        <span v-if="item.id != songId">{{ index+1 | padStart}}</span>
         <span class="iconfont icon-shengyin1" v-else></span>
       </div>
       <div class="pLaySongList-operation">
@@ -47,13 +47,14 @@ export default {
       // let index = null;
       // this.songs.forEach((item,index1)=> {if(item.id==thELement.dataset.id)index = index1});
       // console.log(index)
-      this.$store.dispatch("setSongList",this.songs);
+      window.sessionStorage.setItem("playList",JSON.stringify(this.songs));
+      this.$store.dispatch("setSongList",thELement.dataset.id);
       // console.log(thELement)
-      this.myHttp.getSongUrl(thELement.dataset.id,(res)=>{
-        // console.log(res.data)
-        this.$store.commit('setSongId',res.data.data[0].id);
-        this.$store.commit('setSongUrl',res.data.data[0].url);
-      })
+      // this.myHttp.getSongUrl(thELement.dataset.id,(res)=>{
+      //   // console.log(res.data)
+      //   this.$store.commit('setSongId',res.data.data[0].id);
+      //   this.$store.commit('setSongUrl',res.data.data[0].url);
+      // })
     }
   },
   created() {
@@ -75,7 +76,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.myFun.timerdispose(227000))
+    // console.log(this.myFun.timerdispose(227000))
   },
   computed: {
     songId(){

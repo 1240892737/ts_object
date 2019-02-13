@@ -2,7 +2,8 @@
   <div class="banner">
     <swiper :options="swiperOption">
       <swiper-slide v-for="(item, index) in swiperImg" :key="index" :data-id="item.targetId" :data-type="item.targetType">
-        <img :src="item.imageUrl">
+        <img :src="item.imageUrl" v-if="index==0">
+        <img v-lazy="item.imageUrl" v-else>
         <span class="banner-name" :style="`background:${item.titleColor}`">{{ item.typeTitle }}</span>
       </swiper-slide>
     </swiper>
@@ -21,14 +22,12 @@ export default {
   data() {
     return {
       swiperOption: {
+        loop: true,
         notNextTick: true, // notNextTick是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
         autoplay: {
-          delay: 2000, //自动切换的时间间隔，单位ms
-          stopOnLastSlide: false, //当切换到最后一个slide时停止自动切换
+          delay: 3000, //自动切换的时间间隔，单位ms
           disableOnInteraction: false, //用户操作swiper之后，是否禁止autoplay。
-          reverseDirection: false //开启反向自动轮播。
         },
-        loop: true,
         direction: "horizontal",
         grabCursor: true,
         setWrapperSize: true,
@@ -36,13 +35,8 @@ export default {
         pagination: {
           el: ".swiper-pagination",
           type: "bullets",
-          //type: 'fraction',
-          //type : 'progressbar',
-          //type : 'custom',
           progressbarOpposite: true, //使进度条分页器与Swiper的direction参数相反
           bulletElement: "li", //设定分页器指示器（小点）的HTML标签。
-          // dynamicBullets: true,  //动态分页器，当你的slide很多时，开启后，分页器小点的数量会部分隐藏。
-          // dynamicMainBullets: 3, //动态分页器的主指示点的数量
           hideOnClick: true, //默认分页器会一直显示。这个选项设置为true时点击Swiper会隐藏/显示分页器。
           clickable: true //此参数设置为true时，点击分页器的指示点分页器会控制Swiper切换。
         },

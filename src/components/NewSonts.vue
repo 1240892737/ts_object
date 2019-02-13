@@ -1,8 +1,8 @@
 <template>
     <div class="newSongs">
         <div class="newSongList" v-for="(item, index) in newSongs" :key="index">
-            <span class="songId">{{ padStart(index+1,'00') }}</span>
-            <span class="imgUrl"><img :src="item.song.album.blurPicUrl" alt=""><span class="play"><span class="iconfont icon-zbofang"></span></span></span>
+            <span class="songId">{{ index | addling }}</span>
+            <span class="imgUrl"><img v-lazy="item.song.album.blurPicUrl" alt=""><span class="play"><span class="iconfont icon-zbofang"></span></span></span>
             <div class="songTitle">
                 <div class="song-name">{{ item.song.album.name }}</div>
                 <div class="song-writer">{{ item.song.alias.join('/') }}</div>
@@ -20,12 +20,20 @@ export default {
    },
    created() {
     this.myHttp.get('/apis/personalized/newsong?limit=10',(res)=>{
-      console.log(res.data.result)
+    //   console.log(res.data.result)
       this.newSongs = res.data.result;
         // this.songWriter = res.data.songs[0].ar.map(v=>v.name).join('/') ;
       // this.personalizeds = res.data.result;
     })
    },
+    filters:{
+        addling(val){
+            if(val<10){
+                return '0'+val;
+            }
+            return val;
+        }
+    }
 }
 </script>
 <style lang='less'>

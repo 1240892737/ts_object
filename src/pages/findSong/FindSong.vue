@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="findSong">
         as
         <router-view></router-view>
     </div>

@@ -49,7 +49,8 @@ export default {
   },
 }
 </script>
-<style>
+<style lang="less">
+@import "./less/index.less";
 @import './assets/iconfont/iconfont.css';
 *{margin: 0;padding: 0}
 #app {
@@ -78,5 +79,11 @@ export default {
     justify-content: space-around;
     flex-wrap: wrap;
   }
+}
+.text-badge{
+  padding: 2px;
+  box-shadow: 0 0 0 1px @bg_wo;
+  color: @bg_wo;
+  margin: 0 2px;
 }
 </style>

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "./http/http";
-import myFun from "../public/function";
+// import myFun from "../public/function";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -14,6 +14,7 @@ export default new Vuex.Store({
     songUrl:'',
     songId:'',
     songList:[],
+    songPlay:false
   },
   mutations: {
     SET_TABBERSHOW(state,res){
@@ -47,6 +48,9 @@ export default new Vuex.Store({
     setBgUrl(state,bgUrl){
       state.bgUrl = bgUrl;
     },
+    setSongPlay(state,flag){
+      state.songPlay = flag;
+    },
   },
   actions: {
     successLogin(state){
@@ -57,23 +61,34 @@ export default new Vuex.Store({
     setTabberShow(context,res){
       context.commit('SET_TABBERSHOW',res)
     },
-    setSongList(state,songlists,index){
-      // console.log(index)
-      index = index || Math.floor(Math.random() * songlists.length);
-      index = parseInt(index);
-      // console.log(songlists)
-      window.sessionStorage.setItem("playList",JSON.stringify(songlists));
-      // console.log(songlists[index])
+    setSongList(state,index){
+      let songlists = JSON.parse(window.sessionStorage.getItem("playList"));
       let songUrls = songlists.map(v=>v.id);
-      axios.getSongUrl(songUrls,(res)=>{
-        state.commit("setSongList",res.data.data);
-        state.commit("setSongUrl",res.data.data[index].url);
-        state.commit("setSongId",res.data.data[index].id);
-        myFun.setSession({id:res.data.data[index].id,url:res.data.data[index].url})
-      });
+      // console.log(index)
+      if(index == undefined){
+        index = Math.floor(Math.random() * songlists.length);
+        index = parseInt(index);
+        axios.getSongUrl(songUrls,(res)=>{
+          state.commit("setSongList",res.data.data);
+          state.commit("setSongUrl",res.data.data[index].url);
+          state.commit("setSongId",res.data.data[index].id);
+          // myFun.setSession({id:res.data.data[index].id,url:res.data.data[index].url})
+        });
+      }else{
+        axios.getSongUrl(index,(res)=>{
+          state.commit("setSongUrl",res.data.data[0].url);
+          state.commit("setSongId",res.data.data[0].id);
+        });
+        axios.getSongUrl(songUrls,(res)=>{
+          state.commit("setSongList",res.data.data);
+        })
+      };
+      // console.log(index)
+      // console.log(songlists)
+      // console.log(songlists[index])
+      
     },
     setSongs(){
-      
     }
   }
 });

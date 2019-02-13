@@ -18,9 +18,9 @@
   </div>
 </template>
 <script>
+import Banner from '@/components/Banner.vue';
 import SongList from '@/components/SongList.vue';
 import TitleSong from '@/components/TitleSong.vue';
-import Banner from '@/components/Banner.vue';
 import NewSonts from '@/components/NewSonts.vue';
 
 export default {

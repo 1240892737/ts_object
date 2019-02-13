@@ -25,8 +25,8 @@ export default {
     playLists(){
         this.myHttp.get('/apis/playlist/detail?id='+this.listId,(res)=>{
             window.localStorage.setItem('playLists',res.data.playlist.id)
-            this.$store.dispatch('setSongList',res.data.privileges);
-            console.log(res.data);
+            window.sessionStorage.setItem("playList",JSON.stringify(res.data.privileges));
+            this.$store.dispatch('setSongList');
         })
     },
     getPlayList(uid){

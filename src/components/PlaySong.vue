@@ -1,7 +1,7 @@
 <template>
   <div class="playSong">
     <div class="songDetail">
-      <div class="songImg">
+      <div class="songImg" @click="toSongDetails">
         <img :src="songImg" class="songImgUrl">
         <div class="songShade">
           <span class="iconfont icon-amplification_icon"></span>
@@ -46,7 +46,6 @@ export default {
   name: 'playSong',
   data () {
     return {
-      pause:false,
       currentTime: '00:00',
       duration: '04:00',
       progressW: '0',
@@ -62,10 +61,10 @@ export default {
       var self = this;
       if(bool){
         self.$refs.myAudio.play();
-        self.pause = true;
+        self.$store.commit("setSongPlay",true);
       }else{
         self.$refs.myAudio.pause();
-        self.pause = false;
+        self.$store.commit("setSongPlay",false);
       }
     },
     // audio播放函数
@@ -106,7 +105,7 @@ export default {
     closerSong(url,id){
       this.$store.commit('setSongUrl',url);
       this.$store.commit('setSongId',id);
-      this.myFun.setSession({id:id,url:url})
+      // this.myFun.setSession({id:id,url:url})
     },
     // 下一首歌
     nextPrevSong(w,auto){
@@ -114,7 +113,7 @@ export default {
       let songList = this.$store.state.songList;
       if(songList.length == 0){
         songList = JSON.parse(window.sessionStorage.getItem("playList"));
-        this.$store.dispatch("setSongList",songList)
+        // this.$store.dispatch("setSongList",songList)
       }
       // console.log(songList)
       let myAudio = this.$refs.myAudio;
@@ -143,11 +142,8 @@ export default {
           }
         }
       }
-<<<<<<< HEAD
-=======
       // console.log(songList)
       console.log(index)
->>>>>>> 23999d760e903681947b6e003660cc1520b10bd1
       let indexUrl = songList[index].url;
       let indexId = songList[index].id;
       this.closerSong(indexUrl,indexId);
@@ -176,6 +172,11 @@ export default {
           // console.log(this.$store.state.songList);
         })
       }
+    },
+    //打开歌曲详情
+    toSongDetails(){
+      console.log(this.$store.state.songId)
+      this.$router.push('/songDetails')
     }
   },
   computed: {
@@ -185,6 +186,9 @@ export default {
         this.duration = this.myFun.timerdispose(myAudio.duration);
       }
       return this.$store.state.songUrl;
+    },
+    pause(){
+      return this.$store.state.songPlay;
     }
   },
   watch: {
@@ -201,7 +205,8 @@ export default {
     this.closerSong(localStorage.getItem('songUrl'),parseInt(localStorage.getItem('songId')));
     //更新歌单
     this.myHttp.get('/apis/playlist/detail?id='+localStorage.getItem('playLists'),(res)=>{
-      this.$store.dispatch('setSongList',res.data.privileges);
+      window.sessionStorage.setItem("playList",JSON.stringify(res.data.privileges));
+      this.$store.dispatch('setSongList');
     })
   },
   mounted() {
