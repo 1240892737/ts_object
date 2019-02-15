@@ -6,7 +6,8 @@ module.exports = {
       port: 8000,
       proxy: {
           '/apis': {
-              target: 'http://localhost:3000/',  // target host
+              //    https://www.hzyza520.top:8080/   服务器地址
+              target: 'http://localhost:3000/',  // target host 
               ws: true,  // proxy websockets 
               changeOrigin: true,  // needed for virtual hosted sites
               pathRewrite: {

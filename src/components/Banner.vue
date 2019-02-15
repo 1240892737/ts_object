@@ -2,8 +2,8 @@
   <div class="banner">
     <swiper :options="swiperOption">
       <swiper-slide v-for="(item, index) in swiperImg" :key="index" :data-id="item.targetId" :data-type="item.targetType">
-        <img :src="item.imageUrl" v-if="index==0">
-        <img v-lazy="item.imageUrl" v-else>
+        <img :src="item.imageUrl">
+        <!--  v-if="index==0" <img v-lazy="item.imageUrl" v-else> -->
         <span class="banner-name" :style="`background:${item.titleColor}`">{{ item.typeTitle }}</span>
       </swiper-slide>
     </swiper>

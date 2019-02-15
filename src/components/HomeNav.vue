@@ -1,7 +1,7 @@
 <template>
   <div class="homeNav">
     <div class="navLeft">
-        <router-link to="/" class="logo111"><span class="iconfont icon-list_icon" @click="setTabber"></span><img src="../../public/logo1.png"></router-link>
+        <div class="logo111" @click="setTabber"><span class="iconfont icon-list_icon" @click="setTabber"></span><img src="../../public/logo1.png"></div>
         <Search></Search>
     </div>
     <div class="navRight">

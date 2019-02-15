@@ -23,15 +23,37 @@ export default {
     }
   },
   
-  methods: {},
+  methods: {
+      getLyric(lyric){
+          lyric = lyric.replace(/\n/g,"<br/>")
+          let lyricaa = lyric.split("<br/>");
+          console.log(lyricaa);
+          let timer,songText;
+          lyricaa.map(res=>{
+
+          });
+      },
+      updataSong(){
+        this.myHttp.getSongDetail(this.$store.state.songId,res=>{
+            // console.log(res.data)
+            if(res.data.songs.length==1){
+                this.songDetails = res.data.songs[0];
+            }
+        });
+        this.myHttp.get("/apis/lyric?id="+this.$store.state.songId,res=>{
+            // console.log(res.data.lrc.lyric)
+            this.getLyric(res.data.lrc.lyric);
+            if(res.data.songs.length==1){
+                this.songDetails = res.data.songs[0];
+            }
+        });
+      }
+  },
   created() {
-    // console.log(this.$store.state.songId);
-    this.myHttp.getSongDetail(this.$store.state.songId,res=>{
-        console.log(res.data)
-        if(res.data.songs.length==1){
-            this.songDetails = res.data.songs[0];
-        }
-    })
+    this.updataSong();
+    // setInterval((res)=>{
+    //     console.log(this.currentTime)
+    // },1000)
   },
   computed: {
     songPlay(){
@@ -40,15 +62,10 @@ export default {
  },
   watch: {
     '$store.state.songId':function(newVal,oldVal){
-    //   console.log(this.$store.state.songId)
-      this.myHttp.getSongDetail(this.$store.state.songId,res=>{
-        console.log(res.data)
-        if(res.data.songs.length==1){
-            this.songDetails = res.data.songs[0];
-        }
-      });
+        this.updataSong();
     }
   },
+  props:["currentTime"],
 }
 </script>
 

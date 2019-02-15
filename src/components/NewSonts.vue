@@ -40,7 +40,7 @@ export default {
 .newSongs{
     display: flex;
     flex-wrap: wrap;
-    color: #333;
+    color: rgba(255, 255, 255, .8);
     .newSongList{
         width: 50%;
         display: flex;
@@ -72,13 +72,13 @@ export default {
         }
     }
     .newSongList:nth-child(4n+1){
-        background: rgba(0, 0, 0, .2);
+        background: rgba(255, 255, 255, .1);
     }
     .newSongList:nth-child(4n){
-        background: rgba(0, 0, 0, .2);
+        background: rgba(255, 255, 255, .1);
     }
     .newSongList:hover{
-        background: rgba(0, 0, 0, .4);
+        background: rgba(255, 255, 255, .4);
     }
 }
 </style>

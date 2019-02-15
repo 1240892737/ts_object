@@ -67,10 +67,10 @@ export default {
         width: 100%;
     }
     .list-title{
-        color: #666;
+        color: rgba(255, 255, 255, 0.7);
     }
     .list-title:hover{
-        color: #333;
+        color: rgba(255, 255, 255, 0.9);
     }
     .list-text-item{
         position: absolute;

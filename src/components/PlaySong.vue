@@ -76,6 +76,7 @@ export default {
       if(currentString != this.currentTime){
         this.currentTime = currentString;
         this.progressW = progressW;
+        this.$emit("setCurrentTime",currentString);
       }
       if(myAudio.currentTime>myAudio.duration-0.4) this.nextPrevSong(1,true);
     },
@@ -175,8 +176,7 @@ export default {
     },
     //打开歌曲详情
     toSongDetails(){
-      console.log(this.$store.state.songId)
-      this.$router.push('/songDetails')
+      this.$emit('toSongDetails',!this.SongDetailShow);
     }
   },
   computed: {
@@ -223,6 +223,7 @@ export default {
     };
     //用来保存随机播放的路径
   },
+  props:["SongDetailShow"],
 }
 </script>
 

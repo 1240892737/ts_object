@@ -4,8 +4,9 @@
     <img class="bg-div" src="../../public/mascot2.jpg" v-else/>
     <div class="content">
       <HomeNav :myProfile="myProfile"></HomeNav>
-      <PlaySong></PlaySong>
-      <router-view/>
+      <PlaySong @toSongDetails="toSongDetails" :SongDetailShow="SongDetailShow" @setCurrentTime="setCurrentTime"></PlaySong>
+      <SongDetails v-if="SongDetailShow" :currentTime="currentTime"></SongDetails>
+      <router-view v-else/>
     </div>
   </div>
 </template>
@@ -15,17 +16,25 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 import HomeNav from "@/components/HomeNav.vue";
 import PlaySong from "@/components/PlaySong.vue";
-
 export default {
   name: "home",
   data() {
     return {
+      currentTime:null,
+      SongDetailShow:false,
     }
   },
   components: {
-    HelloWorld,HomeNav,PlaySong
+    HelloWorld,HomeNav,PlaySong,
+    SongDetails:()=>import(/* webpackChunkName: "group-foo" */ "@/pages/outer/SongDetails.vue"),
   },
   methods: {
+    toSongDetails(res){
+      this.SongDetailShow = res;
+    },
+    setCurrentTime(currentTime){
+      this.currentTime = currentTime;
+    }
   },
   props:['myProfile'],
   computed: {
@@ -47,7 +56,7 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 1;
-    .fliter_blur(40px);
+    .fliter_blur(30px);
   }
   .content{
     position: absolute;
@@ -58,7 +67,8 @@ export default {
     background: transparent;
     box-sizing: border-box;
     padding-top: 50px;
-    margin-bottom: 100px;
+    padding-bottom: 100px;
+    background: rgba(0, 0, 0, .3);
   }
 </style>
 
