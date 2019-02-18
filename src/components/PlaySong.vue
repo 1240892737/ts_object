@@ -76,8 +76,8 @@ export default {
       if(currentString != this.currentTime){
         this.currentTime = currentString;
         this.progressW = progressW;
-        this.$emit("setCurrentTime",currentString);
       }
+      this.$emit("setCurrentTime",myAudio.currentTime.toFixed(2));
       if(myAudio.currentTime>myAudio.duration-0.4) this.nextPrevSong(1,true);
     },
     //音乐进度点击事件
