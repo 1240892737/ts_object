@@ -25,7 +25,7 @@ export default {
     // console.log(this.$route.params.id)
     this.myHttp.getPlayList(this.$route.params.id,(res)=>{
       this.playlist = res.data.playlist;
-      console.log(res.data.privileges)
+      // console.log(res.data.privileges)
       for (const i in res.data.privileges) {
           if (res.data.privileges.hasOwnProperty(i)) {
               uids.push(res.data.privileges[i].id);

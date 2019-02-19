@@ -16,9 +16,11 @@
             </div>
         </div>
     </div>
+    <Comment type='song' ref="comment"></Comment>
   </div>
 </template>
 <script>
+import Comment from "../../components/Comment.vue";
 export default {
   name: "songDetails",
   data() {
@@ -32,10 +34,11 @@ export default {
   },
 
   methods: {
+    //处理歌词问题
     getLyric(lyric) {
       lyric = lyric.replace(/\n/g, "<br/>");
       let lyricaa = lyric.split("<br/>");
-    //   console.log(lyricaa);
+    
       let timer=[], songText = [];
       lyricaa.map(res => {
         //   console.log(res)
@@ -49,14 +52,36 @@ export default {
                 timer.push(0);
             }
         }else{
+          if(v.length != 2){
+            v.map((item,index)=>{
+              if(index != v.length - 1){
+                timer.push(this.timeTranstion(v[index].replace("[",'')));
+                songText.push(v[v.length - 1]);
+              }
+            })
+          }else{
             songText.push(v[1])
             timer.push(this.timeTranstion(v[0].replace("[",'')));
+          }
+          
         }
       });
-      this.songTimer = timer;
-      this.songText = songText;
-    //   console.log(this.songText)
+      //切出重复的歌词
+      let obj = {},objArr = [];
+      for(let i=0;i<timer.length;i++){
+        obj[1] = songText[i];
+        obj[2] = timer[i];
+        objArr.push(obj);
+        obj = {};
+      }
+      objArr.sort((a,b)=>{
+        return a[2]-b[2];
+      })
+      this.songTimer = objArr.map(res=>res[2]);
+      this.songText = objArr.map(res=>res[1]);
+      // console.log(this.songTimer,this.songText);
     },
+    //00:00转换成秒速
     timeTranstion(timer){
         let minute = parseInt(timer.split(':')[0]);
         let second = parseFloat(timer.split(':')[1]);
@@ -66,6 +91,7 @@ export default {
             return num;
         }
     },
+    //更新歌词
     updataSong() {
       this.myHttp.getSongDetail(this.$store.state.songId, res => {
         // console.log(res.data.songs)
@@ -75,7 +101,7 @@ export default {
       });
       this.myHttp.get("/apis/lyric?id=" + this.$store.state.songId, res => {
         // console.log(res.data)
-        // console.log(res.data)
+        // console.log(res.data.lrc.lyric)
         // console.log('lrc' in res.data)
         if(!('lrc' in res.data)){
             this.songText = ["纯音乐,请欣赏"];
@@ -87,7 +113,9 @@ export default {
             this.textCenter();
         },200);
       });
+      this.$refs.comment.firstFunction();
     },
+    //居中歌词
     textCenter(){
         let songTextss = this.$refs.songTextss;
         let active = songTextss.getElementsByClassName('active');
@@ -95,6 +123,7 @@ export default {
         // console.log(activeTop)
         songTextss.style.top = -activeTop + 'px';
     },
+    //设置歌词居中
     currentTimeWatch(newVal,oldVal){
         // console.log(newVal)
         for(let i=0;i<this.songTimer.length;i++){
@@ -130,7 +159,10 @@ export default {
         this.currentTimeWatch(newVal,oldVal)
     }
   },
-  props: ["currentTime"]
+  props: ["currentTime"],
+  components:{
+    Comment
+  },
 };
 </script>
 

@@ -34,5 +34,20 @@ const f = {
         if(currentSec<10) currentSec = '0'+currentSec;
         return currentMinute +':'+ currentSec;
     },
+    timeDays(time){
+        time = new Date(time);
+        let nowTime1 = new Date();
+        let todayTime = new Date(new Date().toLocaleDateString()).getTime()/1000;
+        let diffTime = (nowTime1 - time)/1000;
+        if(diffTime<180) return "刚刚";
+        if(diffTime<3600) return Math.floor(diffTime/60)+"分钟前";
+        // if(diffTime<10800) return Math.floor(diffTime/3600)+"天前";
+        if(time/1000 > todayTime) return `${this.duoling(time.getHours())}:${this.duoling(time.getMinutes())}`;
+        if(nowTime1.getFullYear()!= time.getFullYear()) return `${time.getFullYear()}年${time.getMonth()+1}月${time.getDate()}日 ${this.duoling(time.getHours())}:${this.duoling(time.getMinutes())}`;
+        return `${time.getMonth()+1}月${time.getDate()}日 ${this.duoling(time.getHours())}:${this.duoling(time.getMinutes())}`;
+    },
+    duoling(num){
+       return num<10?'0'+num:num;
+    }
 };
 export default f;

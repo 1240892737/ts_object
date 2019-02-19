@@ -15,7 +15,7 @@
     <!-- 上一首/下一首 -->
     <div class="handleSong">
       <div class="prevSong song-btn" @click="nextPrevSong(-1)"><span class="iconfont icon-zshangyishou"></span></div>
-      <div class="pause song-btn" @click="pause_btn(!pause)">
+      <div class="pause song-btn" @click="pause_btn(pause)">
         <span class="iconfont icon-zbofang" v-show="!pause"></span>
         <span class="iconfont icon-zzanting" v-show="pause"></span>
       </div>
@@ -59,13 +59,9 @@ export default {
   methods: {
     pause_btn(bool){
       var self = this;
-      if(bool){
-        self.$refs.myAudio.play();
-        self.$store.commit("setSongPlay",true);
-      }else{
-        self.$refs.myAudio.pause();
-        self.$store.commit("setSongPlay",false);
-      }
+      // console.log(bool)
+      bool?self.$store.commit("setSongPlay",false):self.$store.commit("setSongPlay",true);
+      this.pause?this.$refs.myAudio.play():this.$refs.myAudio.pause();
     },
     // audio播放函数
     myAudioPlan(myAudio){
@@ -89,7 +85,7 @@ export default {
       this.progressW = (currentX/progress.clientWidth).toFixed(4)*100;
       // console.log(this.progressW * myAudio.duration)
       myAudio.currentTime = (this.progressW * myAudio.duration/100).toFixed(2);
-      this.pause_btn(true);
+      this.pause_btn(false);
     },
     //音量点击事件
     audioVolume(e){
@@ -168,7 +164,7 @@ export default {
             window.localStorage.setItem('songUrl',this.$store.state.songUrl);
             window.localStorage.setItem('songId',this.$store.state.songId);
             // this.closerSong(this.$store.state.songUrl,this.$store.state.songId)
-            this.pause_btn(true)
+            this.pause_btn(false)
           }
           // console.log(this.$store.state.songList);
         })
@@ -189,9 +185,14 @@ export default {
     },
     pause(){
       return this.$store.state.songPlay;
-    }
+    },
   },
   watch: {
+    // '$store.state.songPlay':function(newVal,oldVal){
+    //   console.log(newVal)
+    //   newVal?this.$refs.myAudio.play():this.$refs.myAudio.pause();
+    //   return newVal;
+    // },
     '$store.state.songUrl':function(newVal,oldVal){
       // console.log(this.$store.state.songId)
       this.songUrlWacth();

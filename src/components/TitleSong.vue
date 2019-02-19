@@ -28,13 +28,13 @@ export default {
     margin: 0 10px;
     border-bottom: 1px solid rgba(255,255,255, .5);
     line-height: 42px;
-    margin-top: 10px;
+    margin: 16px 0;
     .title-name{
         font-size: 26px;
-        color: #333;
+        color: rgba(255, 255, 255, .7);
     }
     .title-more{
-        color: #666;
+        color: rgba(255, 255, 255, .5);
         font-size: 18px;
     }
 }

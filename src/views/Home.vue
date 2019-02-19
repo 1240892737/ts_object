@@ -5,8 +5,8 @@
     <div class="content">
       <HomeNav :myProfile="myProfile"></HomeNav>
       <PlaySong @toSongDetails="toSongDetails" :SongDetailShow="SongDetailShow" @setCurrentTime="setCurrentTime"></PlaySong>
-      <SongDetails v-if="SongDetailShow" :currentTime="currentTime"></SongDetails>
-      <router-view v-else/>
+      <SongDetails v-show="SongDetailShow" :currentTime="currentTime" ref="SongDetails"></SongDetails>
+      <router-view v-show="!SongDetailShow"/>
     </div>
   </div>
 </template>
@@ -30,6 +30,7 @@ export default {
   },
   methods: {
     toSongDetails(res){
+      if(res) this.$refs.SongDetails.updataSong();
       this.SongDetailShow = res;
     },
     setCurrentTime(currentTime){
