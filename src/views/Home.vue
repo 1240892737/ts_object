@@ -3,9 +3,9 @@
     <img class="bg-div" :src="bgUrl" v-if="bgUrl"/>
     <img class="bg-div" src="../../public/mascot2.jpg" v-else/>
     <div class="content">
-      <HomeNav :myProfile="myProfile"></HomeNav>
+      <HomeNav :myProfile="myProfile" @closeSongDeta="close(false)"></HomeNav>
       <PlaySong @toSongDetails="toSongDetails" :SongDetailShow="SongDetailShow" @setCurrentTime="setCurrentTime"></PlaySong>
-      <SongDetails v-show="SongDetailShow" :currentTime="currentTime" ref="SongDetails"></SongDetails>
+      <SongDetails v-show="SongDetailShow" :currentTime="currentTime" ref="SongDetails" @close="close"></SongDetails>
       <router-view v-show="!SongDetailShow"/>
     </div>
   </div>
@@ -35,6 +35,9 @@ export default {
     },
     setCurrentTime(currentTime){
       this.currentTime = currentTime;
+    },
+    close(flag){
+      this.SongDetailShow = flag;
     }
   },
   props:['myProfile'],

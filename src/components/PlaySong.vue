@@ -54,6 +54,7 @@ export default {
       songWriter: 'asd',
       songImg:'',
       songOrder: 1,//1是顺序播放，2是单曲循环，3是随机播放
+      timer:null,//节流
     }
   },
   methods: {
@@ -106,6 +107,7 @@ export default {
     },
     // 下一首歌
     nextPrevSong(w,auto){
+      clearTimeout(this.timer);
       let index = 0;
       let songList = this.$store.state.songList;
       if(songList.length == 0){
@@ -140,10 +142,12 @@ export default {
         }
       }
       // console.log(songList)
-      console.log(index)
-      let indexUrl = songList[index].url;
-      let indexId = songList[index].id;
-      this.closerSong(indexUrl,indexId);
+      this.timer = setTimeout(()=>{
+        console.log(index)
+        let indexUrl = songList[index].url;
+        let indexId = songList[index].id;
+        this.closerSong(indexUrl,indexId);
+      },200);
     },
     //修改路径
     setSongOrder(){

@@ -1,7 +1,7 @@
 <template>
   <div class="homeNav">
     <div class="navLeft">
-        <div class="logo111" @click="setTabber"><span class="iconfont icon-list_icon" @click="setTabber"></span><img src="../../public/logo1.png"></div>
+        <div class="logo111"><span class="iconfont icon-list_icon" @click="setTabber"></span><img src="../../public/logo1.png"  @click="toIndex"></div>
         <Search></Search>
     </div>
     <div class="navRight">
@@ -28,7 +28,7 @@ export default {
   props:['myProfile'],
   watch: {
       myProfile:function(a){
-          this.myProfile = a;
+        this.myProfile = a;
       }
   },
   methods: {
@@ -38,7 +38,10 @@ export default {
     setLogin(){
         this.$store.commit('SET_LOGINSHOW',true);
     },
-    
+    toIndex(){
+        this.$router.push('/');
+        this.$emit("closeSongDeta");
+    }
   },
   components:{
     Search

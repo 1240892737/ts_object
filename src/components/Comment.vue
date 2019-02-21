@@ -13,7 +13,7 @@
                     </div>
                     <div class="comment-detail">
                         <p class="comment-time">{{ myFun.timeDays(item.time) }}</p>
-                        <div class="comment-praise"><span :class="{'iconfont icon-praise_icon':true,'active':item.liked}"></span>({{ item.likedCount }})</div>
+                        <div :class="{'comment-praise':true,'active':item.liked}" @click="commentLike('hot',index)"><span class="iconfont icon-praise_icon"></span>({{ item.likedCount }})</div>
                     </div>
                 </div>
             </li>
@@ -32,15 +32,12 @@
             </li>
         </ul>
     </div>
-    <div class="simi-song">
-        <div class="simi-song-item">
-            <div class="header-comment">包含这首歌的歌单</div>
-        </div>
+    <div class="simi-song" v-if="obj.simisongShow">
         <div class="simi-song-item">
             <div class="header-comment">相似歌曲</div>
             <MySongs v-for="(item,index) in simiSong" :key="index" :item='item'></MySongs>
         </div>
-        <div class="simi-song-item">
+        <div class="simi-song-item" v-if="simiUser.length">
             <div class="header-comment">喜欢这首歌的人</div>
             <div class="like-users" v-for="(item,index) in simiUser" :key="index">
                 <div class="like-names">
@@ -62,51 +59,78 @@ export default {
         comments:[],
         simiSong:[],
         simiUser:[],
+        timer1:null,
     }
   },
   methods: {
     firstFunction(){
         if(this.type == "song"){
-            this.myHttp.get(`/apis/comment/music?id=${this.$store.state.songId}`,res=>{
-                console.log(res.data);
-                this.comments = res.data;
-                // console.log(this.myFun.timeDays(res.data.hotComments[0].time))
-            })
+            this.getComments();
             setTimeout(()=>{
                 this.getSimiSong();
             },400);
         }
     },
-    // getUsers(){
-    //     if(this.comments){
-    //         let id = this.comments.comments.map((res,index)=>{index<10?return res.})
-
-    //     }
-    //     this.myHttp.get(`/apis/user/detail?id=${}`,res=>{
-    //         console.log(res.data);
-    //         this.comments = res.data;
-    //         // console.log(this.myFun.timeDays(res.data.hotComments[0].time))
-    //     })
-    // }
     getSimiSong(){
         this.myHttp.get(`/apis/simi/song?id=${this.$store.state.songId}`,res=>{
-            console.log(res.data);
+            // console.log(res.data);
             this.simiSong = res.data.songs;
             // this.comments = res.data;
             // console.log(this.myFun.timeDays(res.data.hotComments[0].time))
         })
         this.myHttp.get(`/apis/simi/user?id=${this.$store.state.songId}`,res=>{
-            console.log(res.data);
             this.simiUser = res.data.userprofiles;
             // this.comments = res.data;
             // console.log(this.myFun.timeDays(res.data.hotComments[0].time))
+        });
+    },
+    getComments(){
+        this.myHttp.get(`/apis/comment/music?id=${this.$store.state.songId}`,res=>{
+            this.comments = res.data;
+            // console.log(this.myFun.timeDays(res.data.hotComments[0].time))
         })
+    },
+    commentLike(type,index){
+        clearTimeout(this.timer1);
+        let cid,liked;
+        if(type="hot") {
+            cid = this.comments.hotComments[index].commentId;
+            liked = this.comments.hotComments[index].liked;
+            this.comments.hotComments[index].liked = !liked;
+        }
+        if(type="now") {
+            cid = this.comments.comments[index].commentId;
+            liked = this.comments.comments[index].liked;
+            this.comments.comments[index].liked = !liked;
+        }
+        liked=!liked;
+        // console.log(cid)
+        console.log(liked,`/apis/comment/like?id=${this.$store.state.songId}&cid=${cid}&t=${liked?1:0}&type=${this.obj.type}`)
+        this.timer1 = setTimeout(()=>{
+            this.myHttp.get(`/apis/comment/like?id=${this.$store.state.songId}&cid=${cid}&t=${liked?1:0}&type=${this.obj.type}`,res=>{
+                // console.log(res.data)
+                if(res.data.code == 200){
+                    setTimeout(()=>{
+                        this.getComments();
+                    },10000)
+                }
+            });
+        },400)
+    }
+  },
+  filters: {
+    playCounts: function (value) {
+        if (!value) return ''
+        if(value>100000){
+            return Math.floor(value/10000) + '万';
+        }
+        return Math.floor(value);
     }
   },
   created(){
     this.firstFunction();
   },
-  props:["type"],
+  props:["type","obj"],
   components:{
     MySongs
   }

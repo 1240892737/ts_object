@@ -16,7 +16,10 @@
             </div>
         </div>
     </div>
-    <Comment type='song' ref="comment"></Comment>
+    <Comment type='song' ref="comment" :obj="{'simisongShow':true,'type':0}"></Comment>
+    <div class="close" @click="closeSongDetail(false)">
+      <span class="iconfont icon-amplification_icon"></span>
+    </div>
   </div>
 </template>
 <script>
@@ -26,7 +29,6 @@ export default {
   data() {
     return {
       songDetails: [{}],
-      playsongDetail: false,
       songTimer:null,
       songText:null,
       activeSongText:'',
@@ -119,9 +121,11 @@ export default {
     textCenter(){
         let songTextss = this.$refs.songTextss;
         let active = songTextss.getElementsByClassName('active');
-        let activeTop = active[0].offsetTop - 287/2 + 35;
-        // console.log(activeTop)
-        songTextss.style.top = -activeTop + 'px';
+        if(active){
+          let activeTop = active[0].offsetTop - 287/2 + 35;
+          // console.log(activeTop)
+          songTextss.style.top = -activeTop + 'px';
+        }
     },
     //设置歌词居中
     currentTimeWatch(newVal,oldVal){
@@ -141,6 +145,10 @@ export default {
             }
         }
     },
+    closeSongDetail(flag){
+      console.log(flag)
+      this.$emit("close",flag);
+    }
   },
   created() {
     this.updataSong();
@@ -170,6 +178,21 @@ export default {
 @import url(../../less/index.less);
 .songDetails {
     color: rgba(255, 255, 255, .7);
+  .close{
+    position: fixed;
+    top: 100px;
+    right: 55px;
+    color: #444;
+    background: rgba(255, 255, 255, .8);
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-size: 20px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, .3);
+    cursor: pointer;
+  }
+  .close:hover{
+    background: rgba(255, 255, 255, .95);
+  }
 }
 .songDetails-content {
   display: flex;

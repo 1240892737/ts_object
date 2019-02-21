@@ -4,10 +4,8 @@ import router from "./router";
 import store from "./store";
 import myHttp from "./http/http";
 import MyFun from "../public/function";
-import VueLazyload from "vue-lazyload";
-
-Vue.use(VueLazyload);
-
+import layer from "vue-layer";
+Vue.prototype.$layer = layer(Vue);
 Vue.config.productionTip = false;
 Vue.prototype.myHttp = myHttp;
 Vue.prototype.myFun = MyFun;

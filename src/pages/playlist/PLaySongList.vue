@@ -43,22 +43,15 @@ export default {
           thELement = thELement.parentNode;
         }
       }
-      // let a = 
-      // let index = null;
-      // this.songs.forEach((item,index1)=> {if(item.id==thELement.dataset.id)index = index1});
-      // console.log(index)
       window.sessionStorage.setItem("playList",JSON.stringify(this.songs));
       this.$store.dispatch("setSongList",thELement.dataset.id);
-      // console.log(thELement)
-      // this.myHttp.getSongUrl(thELement.dataset.id,(res)=>{
-      //   // console.log(res.data)
-      //   this.$store.commit('setSongId',res.data.data[0].id);
-      //   this.$store.commit('setSongUrl',res.data.data[0].url);
-      // })
     }
   },
   created() {
-    // console.log(this.songs)
+    console.log(this.songs)
+    this.myHttp.getSongDetail(this.songs[0].id,res=>{
+      console.log(res.data  )
+    })
   },
   filters:{
     padStart(val){

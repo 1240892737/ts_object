@@ -27,6 +27,7 @@ export default {
             window.localStorage.setItem('playLists',res.data.playlist.id)
             window.sessionStorage.setItem("playList",JSON.stringify(res.data.privileges));
             this.$store.dispatch('setSongList');
+            this.$layer.msg('切换歌单了~');
         })
     },
     getPlayList(uid){

@@ -11,6 +11,14 @@
             <img :src="myProfile.avatarUrl" alt="" class="headImg">
             <div class="login-name">欢迎你,{{myProfile.nickname}}! <span class="logonOut" @click="logonOut">退出</span> </div>
           </div>
+          <!-- 选项开始 -->
+          <OptionTabber :title="true">
+            <p class="text" slot="text">收藏的歌单</p>
+          </OptionTabber>
+          <OptionTabber v-for="(item,index) in likePlayList" :key="index" :item="item">
+            <span slot="iconfont" class="iconfont icon-swticonyinle2"></span>
+            <p class="text" slot="text">{{ item.name }}</p>
+          </OptionTabber>
         </div>
         <span class="iconfont close icon-close_icon" @click="closeTabber"></span>
       </div>
@@ -18,12 +26,14 @@
   </transition>
 </template>
 <script>
+import OptionTabber from "../pages/tabber/OptionTabber.vue";
 export default {
   name: '',
   data () {
     return {
       aa:'',
       bb:'',
+      likePlayList:[]
     }
   },
   props:['myProfile'],
@@ -48,11 +58,19 @@ export default {
         }
       })
     },
+    myLikeSong(){
+      this.myHttp.get("/apis/user/playlist?uid="+window.localStorage.getItem("uid"),res=>{
+        // console.log(res.data);
+        this.likePlayList = res.data.playlist;
+        console.log(this.likePlayList)
+      })
+    }
   },
   components:{
-    
+    OptionTabber,
   },
   created(){
+    this.myLikeSong();
   },
   mounted() {
     var th = this;
@@ -85,6 +103,7 @@ export default {
 <style lang='less'>
 @import "../less/index.less";
   .shade{
+    user-select: none;
     position: fixed;
     left: 0;
     top: 0;
@@ -102,6 +121,7 @@ export default {
       background: white;
     }
     .Myimg{
+      margin-bottom: 20px;
       .headImg{
         display: block;
         width: 120px;

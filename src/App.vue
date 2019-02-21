@@ -86,4 +86,7 @@ export default {
   color: @bg_wo;
   margin: 0 2px;
 }
+.icon-aixin{
+  color: @bg_wo;
+}
 </style>

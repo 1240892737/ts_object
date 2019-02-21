@@ -19,11 +19,11 @@
             <div class="creator">
                 <img :src="playlist.creator.avatarUrl" alt="" class="creator-img">
                 <strong class="creator-name">{{playlist.creator.nickname}}</strong>
-                <span class="creator-timer">{{ playlist.trackNumberUpdateTime | days }}创建</span>
+                <span class="creator-timer">{{ playlist.createTime | days }}创建</span>
             </div>
             <div class="playlist-btns">
                 <div class="playlist-play" @click="playlis_play"><span class="iconfont icon-zbofang"></span>播放全部<div class="icons-collect"><span class="iconfont icon-jiahao"></span></div></div>
-                <div class="playlist-collect"><span class="iconfont icon-shoucang"></span>收藏({{ playlist.subscribedCount }})</div>
+                <div class="playlist-collect"><span class="iconfont icon-shoucang"></span><span v-if="playlist.subscribed">已</span>收藏({{ playlist.subscribedCount }})</div>
             </div>
             <div class="playlist-label">
                 标签：<span class="playlist-tags" v-for="(item,index) in playlist.tags" :key="index"><i>{{ item }}</i>/</span>
@@ -37,7 +37,12 @@
 <script>
 export default {
   name: '',
-  props:["playlist"],
+  props:{
+      playlist:{
+          type: Object,
+          default:[]
+      }
+  },
   data () {
     return {
     }
@@ -68,10 +73,13 @@ export default {
     },
     days(value){
         let a = new Date(value)
-        let s = `${a.getFullYear()}/${a.getMonth()}/${a.getDay()}`
+        let s = `${a.getFullYear()}/${a.getMonth()+1}/${a.getDate()}`
         // console.log(s)
         return s;
     }
+  },
+  mounted(){
+      console.log(this.playlist)
   }
 }
 </script>
