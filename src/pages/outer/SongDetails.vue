@@ -16,7 +16,8 @@
             </div>
         </div>
     </div>
-    <Comment type='song' ref="comment" :obj="{'simisongShow':true,'type':0}"></Comment>
+    <p class="lookComment" v-if="!commentShow" @click="openComment">查看评论</p>
+    <Comment v-show="commentShow" type='song' ref="comment" :obj="{'simisongShow':true,'type':0}"></Comment>
     <div class="close" @click="closeSongDetail(false)">
       <span class="iconfont icon-amplification_icon"></span>
     </div>
@@ -36,6 +37,9 @@ export default {
   },
 
   methods: {
+    openComment(){
+      this.$emit('openComment')
+    },
     //处理歌词问题
     getLyric(lyric) {
       lyric = lyric.replace(/\n/g, "<br/>");
@@ -167,7 +171,7 @@ export default {
         this.currentTimeWatch(newVal,oldVal)
     }
   },
-  props: ["currentTime"],
+  props: ["currentTime",'commentShow'],
   components:{
     Comment
   },

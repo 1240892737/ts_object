@@ -48,6 +48,37 @@ const f = {
     },
     duoling(num){
        return num<10?'0'+num:num;
-    }
+    },
+    setLocal(name,res){
+        window.localStorage.setItem(name,JSON.stringify(res));
+    },
+    getLocal(name){
+        return JSON.parse(window.localStorage.getItem(name));
+    },
+    myArrdel(arr,target){
+        let index = arr.indexOf(target);
+        if(index!=-1){
+            arr.splice(index,1);
+            console.log(arr)
+        }
+        return arr;
+    },
+    setlocalLog(target){
+        if(window.localStorage.getItem('localLog')==null) f.setLocal('localLog',[]);
+        let localLog = f.getLocal('localLog');
+        f.myArrdel(localLog,target)
+        localLog.push(target);
+        while(localLog.length>10){
+            localLog.shift();
+        }
+        f.setLocal('localLog',localLog);
+    },
+    compose(...arg){
+        return (result)=>{
+            return arg.reduceRight((result,fn)=>{
+                return fn(result);
+            },result);
+        }
+    },
 };
 export default f;

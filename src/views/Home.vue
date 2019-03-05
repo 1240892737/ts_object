@@ -4,8 +4,8 @@
     <img class="bg-div" src="../../public/mascot2.jpg" v-else/>
     <div class="content">
       <HomeNav :myProfile="myProfile" @closeSongDeta="close(false)"></HomeNav>
-      <PlaySong @toSongDetails="toSongDetails" :SongDetailShow="SongDetailShow" @setCurrentTime="setCurrentTime"></PlaySong>
-      <SongDetails v-show="SongDetailShow" :currentTime="currentTime" ref="SongDetails" @close="close"></SongDetails>
+      <PlaySong @toSongDetails="toSongDetails" :SongDetailShow="SongDetailShow" @setCurrentTime="setCurrentTime" @songChange='commentShow=false'></PlaySong>
+      <SongDetails :commentShow="commentShow" v-show="SongDetailShow" :currentTime="currentTime" ref="SongDetails" @close="close" @openComment="openComment"></SongDetails>
       <router-view v-show="!SongDetailShow"/>
     </div>
   </div>
@@ -22,6 +22,7 @@ export default {
     return {
       currentTime:null,
       SongDetailShow:false,
+      commentShow:false,//评论显示
     }
   },
   components: {
@@ -38,6 +39,9 @@ export default {
     },
     close(flag){
       this.SongDetailShow = flag;
+    },
+    openComment(){
+      this.commentShow = true;
     }
   },
   props:['myProfile'],

@@ -10,16 +10,16 @@
     </div>
     <div class="pLaySongList-item pLaySongList-songs" @dblclick.stop="songsDblclick($event)" v-for="(item,index) in songs" :data-id="item.id" :key="index">
       <div class="serial-number">
-        <span v-if="item.id != songId">{{ index+1 | padStart}}</span>
+        <span v-if="item.id != songId">{{ index+1 | padStart }}</span>
         <span class="iconfont icon-shengyin1" v-else></span>
       </div>
       <div class="pLaySongList-operation">
         <span class="iconfont icon-love_icon" v-if="!item.subscribed"></span>
         <span class="iconfont icon-aixin_shixin" v-else></span>
       </div>
-      <div class="pLaySongList-name">{{ item.name }}</div>
-      <div class="pLaySongList-singer"><span v-for="(item1,index1) in item.ar" :key="index1"><span v-if="index1!=0">/</span>{{ item1.name }}</span></div>
-      <div class="pLaySongList-album">{{ item.al.name }}</div>
+      <div class="pLaySongList-name" v-html="mySearch(item.name)"></div>
+      <div class="pLaySongList-singer"><span v-for="(item1,index1) in item.ar" :key="index1"><span v-if="index1!=0">/</span><span v-html="mySearch(item1.name)"></span></span></div>
+      <div class="pLaySongList-album" v-html="mySearch(item.al.name)">{{ item.al.name }}</div>
       <div class="pLaySongList-time">{{ (item.dt/1000)|timerss }}</div>
     </div>
   </div>
@@ -27,7 +27,18 @@
 <script>
 export default {
   name: 'pLaySongList',
-  props:["songs"],
+  props:{
+    songs:{
+      default: [],
+      type: Array
+    },
+    searchFlag:{
+      default:false,
+    },
+    searchName:{
+      default: '',
+    }
+  },
   data () {
     return {
     }
@@ -45,13 +56,24 @@ export default {
       }
       window.sessionStorage.setItem("playList",JSON.stringify(this.songs));
       this.$store.dispatch("setSongList",thELement.dataset.id);
+    },
+    //匹配搜索文字高亮
+    mySearch(val){
+      if(this.searchFlag){
+        let val1 = val.toLowerCase();
+        let searchNameL = this.searchName.toLowerCase();
+        let index = val1.indexOf(searchNameL);
+        if(index == -1) return val;//如果找不到直接返回
+        let str1 = val.slice(0,index);
+        let str3 = val.slice(index,index+searchNameL.length);
+        let str2 = val.slice(index+searchNameL.length);
+        return `${str1}<span style="color:#78C9EF;">${str3}</span>${str2}`
+      }
+      return val;
     }
   },
   created() {
-    console.log(this.songs)
-    this.myHttp.getSongDetail(this.songs[0].id,res=>{
-      console.log(res.data  )
-    })
+    // window.$searchOption = {searchFlag:this.searchFlag,searchName:this.searchName};//保存搜索选项以便过滤器过滤
   },
   filters:{
     padStart(val){
@@ -66,10 +88,10 @@ export default {
       let currentSec = Math.floor(currentTime%60);
       if(currentSec<10) currentSec = '0'+currentSec;
       return currentMinute +':'+ currentSec;
-    }
+    },
   },
   mounted() {
-    // console.log(this.myFun.timerdispose(227000))
+    console.log(this.searchFlag)
   },
   computed: {
     songId(){
@@ -86,6 +108,7 @@ export default {
 .pLaySongList{
   color: rgba(255, 255, 255, .85);
   user-select: none;
+  font-size: 14px;
   .pLaySongList-item{
     display: flex;
     align-items: center;

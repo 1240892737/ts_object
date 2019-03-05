@@ -200,6 +200,7 @@ export default {
     '$store.state.songUrl':function(newVal,oldVal){
       // console.log(this.$store.state.songId)
       this.songUrlWacth();
+      this.$emit('songChange')
       return newVal;
     },
   },

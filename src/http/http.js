@@ -26,5 +26,8 @@ const f = {
     getPlayList:(uid,success) => {
         return f.get("/apis/playlist/detail?id="+uid,success);
     },
+    getHotSearch(success){
+        return f.get("/apis/search/hot",success);
+    }
 }
 export default f;

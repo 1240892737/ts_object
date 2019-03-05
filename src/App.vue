@@ -34,6 +34,9 @@ export default {
       this.myProfile = '';
     }
   },
+  created() {
+    
+  },
   mounted() {
     this.isOnline();
     // this.myProfile = {nickname:'asd'}

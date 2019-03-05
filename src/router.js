@@ -5,6 +5,7 @@ import FindSong from "@/pages/findSong/FindSong.vue";
 const Recommend =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/findSong/Recommend.vue");
 const SongSheet =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/findSong/SongSheet.vue");
 const PlayList =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/playlist/PlayList.vue");
+const SearchResult =()=>import(/* webpackChunkName: "group-foo" */ "@/pages/Search/SearchResult.vue");
 Vue.use(Router);
 
 export default new Router({
@@ -33,6 +34,11 @@ export default new Router({
       path: "/playlist/:id",
       name: "playList",
       component: PlayList
+    },
+    {
+      path: "/searchResult/:search",
+      name: "searchResult",
+      component: SearchResult
     },
     // {
     //   path: "/about",

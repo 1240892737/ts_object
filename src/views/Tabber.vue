@@ -62,7 +62,7 @@ export default {
       this.myHttp.get("/apis/user/playlist?uid="+window.localStorage.getItem("uid"),res=>{
         // console.log(res.data);
         this.likePlayList = res.data.playlist;
-        console.log(this.likePlayList)
+        // console.log(this.likePlayList)
       })
     }
   },
