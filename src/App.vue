@@ -48,6 +48,11 @@ export default {
       }else{
         console.log('登录失败')
       }
+    },
+    '$route':function(newVal){ //监听路由
+      if(newVal.path.indexOf('/recommend')||newVal.path.indexOf('/playlist')){
+        this.$store.commit('setSongDetailShow',false);
+      }
     }
   },
 }

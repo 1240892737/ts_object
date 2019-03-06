@@ -60,14 +60,7 @@ export default {
     //匹配搜索文字高亮
     mySearch(val){
       if(this.searchFlag){
-        let val1 = val.toLowerCase();
-        let searchNameL = this.searchName.toLowerCase();
-        let index = val1.indexOf(searchNameL);
-        if(index == -1) return val;//如果找不到直接返回
-        let str1 = val.slice(0,index);
-        let str3 = val.slice(index,index+searchNameL.length);
-        let str2 = val.slice(index+searchNameL.length);
-        return `${str1}<span style="color:#78C9EF;">${str3}</span>${str2}`
+        return this.myFun.searchName(val,this.searchName);
       }
       return val;
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="log-item">
-    <p class="myFirst" :data-name='first'>{{ first }}</p>
+    <p class="myFirst" :data-name='first'>{{ first }} </p>
     <span v-if="icon" class="iconfont icon-guanbi" @click="closeLog"></span>
   </div>
 </template>
@@ -28,7 +28,7 @@ export default {
 }
 </script>
 
-<style lang='less' scope>
+<style lang='less'>
   .log-item{
     height:28px;
     line-height: 28px;
@@ -43,6 +43,11 @@ export default {
       font-size: 14px;
       top: 0px;
       color: #333!important;
+    }
+    .myFirst{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .log-item:hover{

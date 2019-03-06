@@ -176,7 +176,8 @@ export default {
     },
     //打开歌曲详情
     toSongDetails(){
-      this.$emit('toSongDetails',!this.SongDetailShow);
+      // console.log(this.$store.state.SongDetailShow)
+      this.$emit('toSongDetails',!this.$store.state.SongDetailShow);
     }
   },
   computed: {
@@ -197,10 +198,14 @@ export default {
     //   newVal?this.$refs.myAudio.play():this.$refs.myAudio.pause();
     //   return newVal;
     // },
-    '$store.state.songUrl':function(newVal,oldVal){
+    '$store.state.songId':function(newVal,oldVal){
       // console.log(this.$store.state.songId)
-      this.songUrlWacth();
-      this.$emit('songChange')
+      this.myHttp.getSongUrl(newVal,(res)=>{
+        // console.log(res.data.data[0].url) 
+        this.$store.commit('setSongUrl',res.data.data[0].url)
+        this.songUrlWacth();
+        this.$emit('songChange');
+      })
       return newVal;
     },
   },
@@ -229,7 +234,6 @@ export default {
     };
     //用来保存随机播放的路径
   },
-  props:["SongDetailShow"],
 }
 </script>
 

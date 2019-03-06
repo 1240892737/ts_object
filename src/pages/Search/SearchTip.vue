@@ -1,24 +1,36 @@
 <template>
-  <div class="search-res" @click="searchTipClick($event)" :style="localLog.length != 0 ? 'width:500px;':'width:250px;'">
-    <div class="hot-log">
-        <p class="search-title"><span class="iconfont icon-search_icon"></span> 热门搜索</p>
-        <Log-item v-for="(item,index) in hotSearch" :key="index" :icon='false' :first='item.first'></Log-item>
-    </div>
+  <div class="search-res">
+    <div class="empty"  @click="searchTipClick($event)" v-if="searchTxt==''" :style="localLog.length != 0 ? 'width:500px;':'width:250px;'">
+        <div class="hot-log">
+            <p class="search-title"><span class="iconfont icon-search_icon"></span> 热门搜索</p>
+            <Log-item v-for="(item,index) in hotSearch" :key="index" :icon='false' :first='item.first'></Log-item>
+        </div>
 
-    <div class="local-log" v-if="localLog.length != 0">
-        <p class="search-title"><span class="iconfont icon-search_icon"></span> 本地记录</p>
-        <Log-item v-for="(item,index) in localLog" :key="index" :icon="true" :first='item' @setlocalLog="setlocalLog"></Log-item>
+        <div class="local-log" v-if="localLog.length != 0">
+            <p class="search-title"><span class="iconfont icon-search_icon"></span> 本地记录</p>
+            <Log-item v-for="(item,index) in localLog" :key="index" :icon="true" :first='item' @setlocalLog="setlocalLog"></Log-item>
+        </div>
+    </div>
+    <div class="search-suggest" v-else>
+        <div class="suggest-item" v-for="(item,index) in suggestResult.order" :key="index">
+            <p class="search-title"><span :class="static2[item]"></span> {{ static1[item] }}</p>
+            <Log-item-high v-for="(item1,index1) in suggestResult[item]" :key="index1" :type="item" :first='item1' :searchTxt="searchTxt"></Log-item-high>
+        </div>
     </div>
   </div>
 </template>
 <script>
 import LogItem from './LogItem.vue'
+import LogItemHigh from './LogItemHigh.vue'
 export default {
   name: 'searchResult',
   data () {
     return {
         hotSearch:[],
-        localLog:[]
+        localLog:[],
+        suggestResult:[],
+        static1:{'songs':'单曲','artists':"歌手",'albums':"专辑",'mvs':"视频",'playlists':"歌单"},
+        static2:{'songs':'iconfont icon-yinle','artists':"iconfont icon-my_icon",'albums':"iconfont icon-zhuanji",'mvs':"iconfont icon-shipin",'playlists':"iconfont icon-swticonyinle2"}
     }
   },
   methods: {
@@ -36,10 +48,22 @@ export default {
             this.$router.push({name:'searchResult',params:{'search': target.dataset.name}});
             setTimeout(()=>{this.setlocalLog()},200);//更新历史记录
         }
+    },
+    //获取搜索建议
+    getSuggest(){
+        // console.log(this.searchTxt)
+        if(this.searchTxt == '') return;
+        this.myHttp.get('/apis/search/suggest?keywords= '+this.searchTxt,(res)=>{
+                // console.log(res.data);
+            if(res.data.code == 200){
+                this.suggestResult = res.data.result;
+                // console.log(this.suggestResult)
+            }
+        })
     }
   },
   components:{
-    LogItem
+    LogItem,LogItemHigh
   },
   created() {
     this.myHttp.getHotSearch((res)=>{
@@ -50,23 +74,28 @@ export default {
     // window.localStorage.setItem('localLog',JSON.stringify(['eee']));
     this.setlocalLog();
   },
+  props:['searchTxt'],
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scope>
 .search-res{
     position: absolute;
     left: 0;
     top: 40px;
-    height: 350px;
+    height: auto;
+    min-height: 350px;
     background: white;
     padding: 8px 0;
     border-radius: 4px;
     box-shadow: 2px 2px 10px 2px rgba(0, 0, 0, .4);
-    transition: width .4s ease-in-out;
-    display: flex;
     text-align: left;
     z-index: 2;
+    .empty{
+        height: 350px;
+        display: flex;
+        transition: width .4s ease-in-out;
+    }
     .search-title{
         color: #666;
         margin-bottom: 6px;
@@ -78,6 +107,15 @@ export default {
     }
     .search-title{text-indent: 16px;}
     .local-log{border-left: 1px solid rgba(0, 0, 0, .2);}
+    .search-suggest{
+        width: 250px;
+        height: auto;
+        .search-title{
+            text-indent: 8px;
+            padding: 4px 0;
+            background: rgba(0, 0, 0, .05);
+        }
+    }
 }
 .search-res::before{
     content: '';

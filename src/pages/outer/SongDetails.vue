@@ -111,7 +111,7 @@ export default {
         // console.log('lrc' in res.data)
         if(!('lrc' in res.data)){
             this.songText = ["纯音乐,请欣赏"];
-            this.songTimer = [0];
+            this.songTimer = ['0'];
         }else this.getLyric(res.data.lrc.lyric);
         
         this.currentTimeWatch(this.currentTime,this.currentTime);
@@ -150,8 +150,7 @@ export default {
         }
     },
     closeSongDetail(flag){
-      console.log(flag)
-      this.$emit("close",flag);
+      this.$store.commit('setSongDetailShow',false);
     }
   },
   created() {

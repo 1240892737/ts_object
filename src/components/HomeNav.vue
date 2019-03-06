@@ -40,7 +40,6 @@ export default {
     },
     toIndex(){
         this.$router.push('/');
-        this.$emit("closeSongDeta");
     }
   },
   components:{

@@ -15,6 +15,7 @@ export default new Vuex.Store({
     songId:'',
     songList:[],
     songPlay:true,
+    SongDetailShow:false,
   },
   mutations: {
     SET_TABBERSHOW(state,res){
@@ -51,6 +52,9 @@ export default new Vuex.Store({
     setSongPlay(state,flag){
       state.songPlay = flag;
     },
+    setSongDetailShow(state,flag){
+      state.SongDetailShow = flag;
+    }
   },
   actions: {
     successLogin(state){

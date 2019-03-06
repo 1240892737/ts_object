@@ -3,9 +3,9 @@
     <img class="bg-div" :src="bgUrl" v-if="bgUrl"/>
     <img class="bg-div" src="../../public/mascot2.jpg" v-else/>
     <div class="content">
-      <HomeNav :myProfile="myProfile" @closeSongDeta="close(false)"></HomeNav>
-      <PlaySong @toSongDetails="toSongDetails" :SongDetailShow="SongDetailShow" @setCurrentTime="setCurrentTime" @songChange='commentShow=false'></PlaySong>
-      <SongDetails :commentShow="commentShow" v-show="SongDetailShow" :currentTime="currentTime" ref="SongDetails" @close="close" @openComment="openComment"></SongDetails>
+      <HomeNav :myProfile="myProfile"></HomeNav>
+      <PlaySong @toSongDetails="toSongDetails" @setCurrentTime="setCurrentTime" @songChange='commentShow=false'></PlaySong>
+      <SongDetails :commentShow="commentShow" v-show="SongDetailShow" :currentTime="currentTime" ref="SongDetails" @openComment="openComment"></SongDetails>
       <router-view v-show="!SongDetailShow"/>
     </div>
   </div>
@@ -21,7 +21,6 @@ export default {
   data() {
     return {
       currentTime:null,
-      SongDetailShow:false,
       commentShow:false,//评论显示
     }
   },
@@ -31,14 +30,12 @@ export default {
   },
   methods: {
     toSongDetails(res){
+      console.log(this.SongDetailShow)
       if(res) this.$refs.SongDetails.updataSong();
-      this.SongDetailShow = res;
+      this.$store.commit('setSongDetailShow',res);
     },
     setCurrentTime(currentTime){
       this.currentTime = currentTime;
-    },
-    close(flag){
-      this.SongDetailShow = flag;
     },
     openComment(){
       this.commentShow = true;
@@ -48,6 +45,9 @@ export default {
   computed: {
     bgUrl:function () {
       return this.$store.state.bgUrl;
+    },
+    SongDetailShow:function () {
+      return this.$store.state.SongDetailShow;
     }
   },
 };
