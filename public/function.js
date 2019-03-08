@@ -89,6 +89,10 @@ const f = {
         let str3 = val.slice(index,index+searchNameL.length);
         let str2 = val.slice(index+searchNameL.length);
         return `${str1}<span style="color:#78C9EF;">${str3}</span>${str2}`
+    },
+    isNaN_null(res){
+        if(!isNaN(res)&&res!=null)
+        return true;else return false;
     }
 };
 export default f;

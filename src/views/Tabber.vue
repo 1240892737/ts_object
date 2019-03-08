@@ -59,11 +59,14 @@ export default {
       })
     },
     myLikeSong(){
-      this.myHttp.get("/apis/user/playlist?uid="+window.localStorage.getItem("uid"),res=>{
-        // console.log(res.data);
-        this.likePlayList = res.data.playlist;
-        // console.log(this.likePlayList)
-      })
+      let localUid = window.localStorage.getItem("uid");
+      if(this.myFun.isNaN_null(localUid)){
+        this.myHttp.get("/apis/user/playlist?uid="+window.localStorage.getItem("uid"),res=>{
+          // console.log(res.data);
+          this.likePlayList = res.data.playlist;
+          // console.log(this.likePlayList)
+        })
+      }
     }
   },
   components:{

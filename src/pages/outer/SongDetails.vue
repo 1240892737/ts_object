@@ -2,7 +2,7 @@
   <div class="songDetails recommend">
     <div class="songDetails-content">
         <div :class="{'songDeta-saucer':true,'songDeta-songPLay':songPlay}">
-            <div class="songDisc">
+            <div class="songDisc" v-if="Object.keys(songDetails).length != 0">
                 <img :src="songDetails.al.picUrl" alt="" class="songDisc-songImg">
             </div>
             <img src="../../assets/songDisc4.png" alt="" class="pin-buckle">
@@ -29,8 +29,8 @@ export default {
   name: "songDetails",
   data() {
     return {
-      songDetails: [{}],
-      songTimer:null,
+      songDetails: [],
+      songTimer:'',
       songText:null,
       activeSongText:'',
     };
@@ -69,9 +69,9 @@ export default {
             songText.push(v[1])
             timer.push(this.timeTranstion(v[0].replace("[",'')));
           }
-          
         }
       });
+      // console.log(timer)
       //切出重复的歌词
       let obj = {},objArr = [];
       for(let i=0;i<timer.length;i++){
@@ -85,7 +85,7 @@ export default {
       })
       this.songTimer = objArr.map(res=>res[2]);
       this.songText = objArr.map(res=>res[1]);
-      // console.log(this.songTimer,this.songText);
+      // console.log(songText);
     },
     //00:00转换成秒速
     timeTranstion(timer){
@@ -99,33 +99,39 @@ export default {
     },
     //更新歌词
     updataSong() {
-      this.myHttp.getSongDetail(this.$store.state.songId, res => {
-        // console.log(res.data.songs)
-        if (res.data.songs.length == 1) {
-          this.songDetails = res.data.songs[0];
+      let store_songId = this.$store.state.songId;
+      if(this.myFun.isNaN_null(store_songId)){
+        this.myHttp.getSongDetail(this.$store.state.songId, res => {
+          // console.log(res.data.songs)
+          if (res.data.songs.length == 1) {
+            this.songDetails = res.data.songs[0];
+          }
+        });
+        this.myHttp.get("/apis/lyric?id=" + this.$store.state.songId, res => {
+          // console.log(res.data)
+          // console.log(res.data.lrc.lyric)
+          // console.log('lrc' in res.data)
+          if(!('lrc' in res.data)){
+              this.songText = ["纯音乐,请欣赏"];
+              this.songTimer = ['0'];
+          }else this.getLyric(res.data.lrc.lyric);
+          
+          this.currentTimeWatch(this.currentTime,this.currentTime);
+          setTimeout(res=>{
+              this.textCenter();
+          },200);
+        });
+        // console.log(this.$refs.comment)
+        if(this.$refs.comment){
+          this.$refs.comment.firstFunction();
         }
-      });
-      this.myHttp.get("/apis/lyric?id=" + this.$store.state.songId, res => {
-        // console.log(res.data)
-        // console.log(res.data.lrc.lyric)
-        // console.log('lrc' in res.data)
-        if(!('lrc' in res.data)){
-            this.songText = ["纯音乐,请欣赏"];
-            this.songTimer = ['0'];
-        }else this.getLyric(res.data.lrc.lyric);
-        
-        this.currentTimeWatch(this.currentTime,this.currentTime);
-        setTimeout(res=>{
-            this.textCenter();
-        },200);
-      });
-      this.$refs.comment.firstFunction();
+      }
     },
     //居中歌词
     textCenter(){
         let songTextss = this.$refs.songTextss;
         let active = songTextss.getElementsByClassName('active');
-        if(active){
+        if(!active||active.length){
           let activeTop = active[0].offsetTop - 287/2 + 35;
           // console.log(activeTop)
           songTextss.style.top = -activeTop + 'px';

@@ -47,6 +47,7 @@ export default {
           }
         }
     },
+    //登录按钮
     login_btn(){
       var th = this;
       // console.log(th.judge_email(th.uid)||th.judge_phone(th.uid))
@@ -78,6 +79,7 @@ export default {
         th.error_log = true;
       }
     },
+    //关闭登录
     closeLogin(){
       this.$store.commit('SET_LOGINSHOW',false);
     }

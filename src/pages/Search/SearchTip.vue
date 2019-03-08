@@ -54,7 +54,7 @@ export default {
         // console.log(this.searchTxt)
         if(this.searchTxt == '') return;
         this.myHttp.get('/apis/search/suggest?keywords= '+this.searchTxt,(res)=>{
-                // console.log(res.data);
+                console.log(res.data);
             if(res.data.code == 200){
                 this.suggestResult = res.data.result;
                 // console.log(this.suggestResult)
@@ -83,8 +83,6 @@ export default {
     position: absolute;
     left: 0;
     top: 40px;
-    height: auto;
-    min-height: 350px;
     background: white;
     padding: 8px 0;
     border-radius: 4px;

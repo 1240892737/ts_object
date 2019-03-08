@@ -1,5 +1,5 @@
 <template>
-    <div class="playName">
+    <div class="playName" v-if="Object.keys(this.playlist).length!=0">
         <img :src="playlist.coverImgUrl" alt="" class="playlist-img">
         <div class="playlist-more">
             <div class="playlist-title">
@@ -39,8 +39,7 @@ export default {
   name: '',
   props:{
       playlist:{
-          type: Object,
-          default:[]
+          default:{}
       }
   },
   data () {
@@ -78,8 +77,10 @@ export default {
         return s;
     }
   },
-  mounted(){
+  created(){
       console.log(this.playlist)
+    if(Object.keys(this.playlist).length!=0)
+    console.log(1); else console.log(2)
   }
 }
 </script>

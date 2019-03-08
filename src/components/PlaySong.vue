@@ -30,7 +30,7 @@
     </div>
     <!-- 音量大小 -->
     <div class="songVolume">
-      <span class="iconfont icon-shengyin songOrder"></span>
+      <span class="iconfont icon-shengyin songOrder" @click="toggleMuted"></span>
       <div ref="audioVolume" class="sumVolume" @click="audioVolume($event)">
         <div class="nowVolume" :style="{width: songVolume +'%'}"><span class="nowBtn"></span></div>
       </div>
@@ -49,7 +49,7 @@ export default {
       currentTime: '00:00',
       duration: '04:00',
       progressW: '0',
-      songVolume: '50',
+      songVolume: '100',
       songName: 'aaaaa',
       songWriter: 'asd',
       songImg:'',
@@ -58,6 +58,7 @@ export default {
     }
   },
   methods: {
+    //暂停/播放
     pause_btn(bool){
       var self = this;
       // console.log(bool)
@@ -90,63 +91,77 @@ export default {
     },
     //音量点击事件
     audioVolume(e){
-      let myAudio = this.$refs.myAudio;
       let audioVolume = this.$refs.audioVolume;
       let currentX = e.clientX-audioVolume.parentNode.offsetLeft-58;
       // this.progressW*myAudio.duration;
+      // this.songVolume = (currentX/audioVolume.clientWidth).toFixed(4)*100;
+      // console.log(this.progressW * myAudio.duration)
       this.songVolume = (currentX/audioVolume.clientWidth).toFixed(4)*100;
       // console.log(this.songVolume)
-      // console.log(this.progressW * myAudio.duration)
-      myAudio.volume = (this.songVolume/100).toFixed(2);
+      this.setVolume(this.songVolume);
+      this.$refs.myAudio.muted = false;//静音关闭
+    },
+    //设置音量
+    setVolume(num){
+      console.log(num)
+      this.$refs.myAudio.volume = (num/100).toFixed(2);
+    },
+    //静音和不静音
+    toggleMuted(){
+      let myAudio = this.$refs.myAudio;
+      let muted = myAudio.muted;
+      // console.log(myAudio.volume)
+      myAudio.muted = !muted;
+      !muted?this.songVolume=0:this.songVolume=myAudio.volume * 100;
     },
     //切歌
-    closerSong(url,id){
-      this.$store.commit('setSongUrl',url);
+    closerSong(id){
+      // this.$store.commit('setSongUrl',url);
       this.$store.commit('setSongId',id);
       // this.myFun.setSession({id:id,url:url})
     },
     // 下一首歌
     nextPrevSong(w,auto){
       clearTimeout(this.timer);
-      let index = 0;
-      let songList = this.$store.state.songList;
-      if(songList.length == 0){
-        songList = JSON.parse(window.sessionStorage.getItem("playList"));
-        // this.$store.dispatch("setSongList",songList)
-      }
-      // console.log(songList)
-      let myAudio = this.$refs.myAudio;
-      var auto = auto || false;
-      myAudio.currentTime = 0;
-      this.currentTime = "00:00";
-      this.progressW = "0";
-      if(this.songOrder == 3){
-        index = Math.floor(Math.random() * songList.length);
-      }else{
-        if(auto && this.songOrder == 2){
-          return;
-        }else{
-          //找出现在歌曲的下标
-          songList.forEach((v,i)=>{
-            if(v.id == this.$store.state.songId) index = i;
-          });
-          if(w>0){//下一首
-            if(index >= songList.length-1){
-              index=0;
-            }
-            else index++;
-          }else{
-            if(index == 0) index=songList.length-1;
-            else index--
-          }
-        }
-      }
       // console.log(songList)
       this.timer = setTimeout(()=>{
+        let index = 0;
+        let songList = this.$store.state.songList;
+        if(songList.length == 0){
+          songList = JSON.parse(window.sessionStorage.getItem("playList"));
+          // this.$store.dispatch("setSongList",songList)
+        }
+        // console.log(songList)
+        let myAudio = this.$refs.myAudio;
+        var auto = auto || false;
+        myAudio.currentTime = 0;
+        this.currentTime = "00:00";
+        this.progressW = "0";
+        if(this.songOrder == 3){
+          index = Math.floor(Math.random() * songList.length);
+        }else{
+          if(auto && this.songOrder == 2){
+            return;
+          }else{
+            //找出现在歌曲的下标
+            songList.forEach((v,i)=>{
+              if(v.id == this.$store.state.songId) index = i;
+            });
+            if(w>0){//下一首
+              if(index >= songList.length-1){
+                index=0;
+              }
+              else index++;
+            }else{
+              if(index == 0) index=songList.length-1;
+              else index--
+            }
+          }
+        }
         console.log(index)
-        let indexUrl = songList[index].url;
+        // let indexUrl = songList[index].url;
         let indexId = songList[index].id;
-        this.closerSong(indexUrl,indexId);
+        this.closerSong(indexId);
       },200);
     },
     //修改路径
@@ -178,7 +193,7 @@ export default {
     toSongDetails(){
       // console.log(this.$store.state.SongDetailShow)
       this.$emit('toSongDetails',!this.$store.state.SongDetailShow);
-    }
+    },
   },
   computed: {
     songUrl:function(){
@@ -199,23 +214,28 @@ export default {
     //   return newVal;
     // },
     '$store.state.songId':function(newVal,oldVal){
-      // console.log(this.$store.state.songId)
-      this.myHttp.getSongUrl(newVal,(res)=>{
-        // console.log(res.data.data[0].url) 
-        this.$store.commit('setSongUrl',res.data.data[0].url)
-        this.songUrlWacth();
-        this.$emit('songChange');
-      })
-      return newVal;
+      if(newVal!=null&&!isNaN(newVal)){
+        console.log(newVal)
+        this.myHttp.getSongUrl(newVal,(res)=>{
+          // console.log(res.data.data[0].url) 
+          this.$store.commit('setSongUrl',res.data.data[0].url)
+          this.songUrlWacth();
+          this.$emit('songChange');
+        })
+        return newVal;
+      }
+      return '';
     },
   },
   created() {
     //保存并且创建第一歌曲记录
     let session = window.sessionStorage;
     let localStorage = window.localStorage;
-    this.closerSong(localStorage.getItem('songUrl'),parseInt(localStorage.getItem('songId')));
+    this.closerSong(parseInt(localStorage.getItem('songId')));
     //更新歌单
-    this.myHttp.get('/apis/playlist/detail?id='+localStorage.getItem('playLists'),(res)=>{
+    let playListsId = localStorage.getItem('playLists');
+    this.myFun.isNaN_null(localStorage.getItem('playLists'))?playListsId = localStorage.getItem('playLists'):playListsId = '442267551';
+    this.myHttp.get('/apis/playlist/detail?id='+playListsId,(res)=>{
       window.sessionStorage.setItem("playList",JSON.stringify(res.data.privileges));
       this.$store.dispatch('setSongList');
     })
