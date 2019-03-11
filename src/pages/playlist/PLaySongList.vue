@@ -53,8 +53,18 @@ export default {
         }else{
           thELement = thELement.parentNode;
         }
+      };
+      // console.log(this.songs)
+      let songsCopy = this.myFun.songsCopy(this.songs);
+      //如果播放是搜索列表则添加列表，反之
+      if(this.searchFlag){
+        let index = [].indexOf.call(thELement.parentElement.children, thELement) - 1;
+        this.myFun.setPlayList('sess',songsCopy[index]);
+        this.$layer.msg('添加歌单了~');
+      }else{
+        window.sessionStorage.setItem("playList",JSON.stringify(songsCopy));
+        this.$layer.msg('切换歌单了~');
       }
-      window.sessionStorage.setItem("playList",JSON.stringify(this.songs));
       this.$store.dispatch("setSongList",thELement.dataset.id);
     },
     //匹配搜索文字高亮
@@ -84,7 +94,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.searchFlag)
+    // console.log(this.searchFlag)
   },
   computed: {
     songId(){

@@ -20,6 +20,11 @@ export default {
         let store = this.$store;
         if(this.type == 'songs'){ //歌曲
             this.$store.commit('setSongId',this.first.id);
+            console.log(this.first)
+            // window.sessionStorage.setItem("playList",JSON.stringify(this.myFun.songsCopy(this.first)));
+            console.log(this.myFun.songsCopy(this.first))
+            this.myFun.setPlayList('sess',this.myFun.songsCopy(this.first))
+            this.$layer.msg('添加歌单了~');
             return;
         }
         if(this.type == 'artists'){ //歌手

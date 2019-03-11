@@ -37,11 +37,15 @@
     </div>
     <!-- 播放顺序 -->
     <span @click="setSongOrder" :class="{'iconfont':true,'songOrder':true,'icon-suijibofang':songOrder==3,'icon-danquxunhuan':songOrder==2,'icon-xunhuanbofang':songOrder==1}"></span>
+    <!-- 播发列表 -->
+    <div class="song-number" @click="openList"><span class="song-number-text">{{ sessionLength }}</span></div>
+    <nowPLay v-if="nowPlay"></nowPLay>
     <!-- preload在页面加载加载音频 -->
     <audio :src="songUrl" type="audio/mp3" autoplay="autoplay" loop class="audioWo" ref="myAudio"></audio>
   </div>
 </template>
 <script>
+import nowPLay from '../pages/playlist/nowPlay';
 export default {
   name: 'playSong',
   data () {
@@ -55,6 +59,8 @@ export default {
       songImg:'',
       songOrder: 1,//1是顺序播放，2是单曲循环，3是随机播放
       timer:null,//节流
+      sessionLength:0,//播放歌曲数,
+      nowPlay:true,//播放列表显示
     }
   },
   methods: {
@@ -194,6 +200,10 @@ export default {
       // console.log(this.$store.state.SongDetailShow)
       this.$emit('toSongDetails',!this.$store.state.SongDetailShow);
     },
+    //打开播放列表
+    openList(){
+
+    }
   },
   computed: {
     songUrl:function(){
@@ -208,14 +218,10 @@ export default {
     },
   },
   watch: {
-    // '$store.state.songPlay':function(newVal,oldVal){
-    //   console.log(newVal)
-    //   newVal?this.$refs.myAudio.play():this.$refs.myAudio.pause();
-    //   return newVal;
-    // },
     '$store.state.songId':function(newVal,oldVal){
+      this.sessionLength = this.myFun.getSess('playList').length||[];
       if(newVal!=null&&!isNaN(newVal)){
-        console.log(newVal)
+        // console.log(newVal)
         this.myHttp.getSongUrl(newVal,(res)=>{
           // console.log(res.data.data[0].url) 
           this.$store.commit('setSongUrl',res.data.data[0].url)
@@ -223,7 +229,7 @@ export default {
           this.$emit('songChange');
         })
         return newVal;
-      }
+      };
       return '';
     },
   },
@@ -254,6 +260,9 @@ export default {
     };
     //用来保存随机播放的路径
   },
+  components:{
+    nowPLay
+  }
 }
 </script>
 
@@ -272,7 +281,6 @@ export default {
   height: 80px;
   background: white;
   z-index: 3;
-  overflow: hidden;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -414,9 +422,33 @@ export default {
     border-radius: 50%;
     transform: translate(-50%,-50%);
   }
+  //播发列表的
+  .song-number{
+    padding: 0 12px;
+    width: 30px;
+    height: 20px;
+    background: url('../assets/Broadcast_list.png') no-repeat left center;
+    position: relative;
+    cursor: pointer;
+    .song-number-text{
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      width: 30px;
+      height: 15px;
+      margin-top: -7px;
+      // margin-left: -8px;
+      line-height: 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #333;
+      background: rgba(0, 0, 0, .2);
+      border-radius: 0 20px 20px 0;
+    }
+  }
   //播放顺序
-  .songOrder{
-    margin: 0 10px;
+  .songOrder,{
+    margin: 0 8px;
     font-size: 20px;
     cursor: pointer;
   }

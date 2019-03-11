@@ -24,8 +24,12 @@ export default {
   methods:{
     playLists(){
         this.myHttp.get('/apis/playlist/detail?id='+this.listId,(res)=>{
+            // console.log(res.data.playlist.tracks)
             window.localStorage.setItem('playLists',res.data.playlist.id)
-            window.sessionStorage.setItem("playList",JSON.stringify(res.data.privileges));
+
+            // console.log(this.songs)
+            let songsCopy = this.myFun.songsCopy(res.data.playlist.tracks);
+            window.sessionStorage.setItem("playList",JSON.stringify(songsCopy));
             this.$store.dispatch('setSongList');
             this.$layer.msg('切换歌单了~');
         })

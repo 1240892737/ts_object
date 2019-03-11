@@ -33,7 +33,7 @@ export default {
     }
   },
   created() {
-      this.SearchSong(this.$route.params.search);
+    this.SearchSong(this.$route.params.search);
   },
   components:{
     PlaySongList

@@ -54,7 +54,7 @@ export default {
         // console.log(this.searchTxt)
         if(this.searchTxt == '') return;
         this.myHttp.get('/apis/search/suggest?keywords= '+this.searchTxt,(res)=>{
-                console.log(res.data);
+                // console.log(res.data);
             if(res.data.code == 200){
                 this.suggestResult = res.data.result;
                 // console.log(this.suggestResult)
